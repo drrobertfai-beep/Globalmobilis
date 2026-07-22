@@ -300,3 +300,116 @@ export const logIn = createServerFn({ method: "POST" }).handler(
 export const logOut = createServerFn({ method: "POST" }).handler(async () => {
   return { cookie: clearSessionCookie() };
 });
+
+// =============================================================================
+// Password Reset
+// =============================================================================
+
+const resetTokens = new Map<string, { email: string; expiresAt: number }>();
+
+const RESET_TOKEN_EXPIRY = 60 * 60 * 1000; // 1 hour
+
+function generateResetToken(): string {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let token = "";
+  for (let i = 0; i < 48; i++) token += chars.charAt(Math.floor(Math.random() * chars.length));
+  return token;
+}
+
+export const requestPasswordReset = createServerFn({ method: "POST" }).handler(
+  async (data: unknown) => {
+    const { email } = data as { email: string };
+
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return { success: false, error: "Please enter a valid email address" };
+    }
+
+    try {
+      // Check if user exists
+      let userExists = false;
+      if (process.env.DATABASE_URL) {
+        const { neon } = await import("@neondatabase/serverless");
+        const sql = neon(process.env.DATABASE_URL);
+        const rows = await sql`SELECT id FROM users WHERE email = ${email.toLowerCase()}`;
+        userExists = rows.length > 0;
+      } else {
+        const users = getUsers();
+        userExists = users.some((u) => u.email === email.toLowerCase());
+      }
+
+      // Generate token even if user doesn't exist (prevents email enumeration)
+      const token = generateResetToken();
+      resetTokens.set(token, {
+        email: email.toLowerCase(),
+        expiresAt: Date.now() + RESET_TOKEN_EXPIRY,
+      });
+
+      // Clean expired tokens
+      for (const [key, val] of resetTokens) {
+        if (val.expiresAt < Date.now()) resetTokens.delete(key);
+      }
+
+      if (!userExists) {
+        // Return success anyway to not leak user existence
+        return { success: true, message: "If an account exists with that email, a reset link has been sent." };
+      }
+
+      // In production, send an email. For now, return the token (dev only).
+      const resetLink = `${process.env.APP_URL || "http://localhost:3000"}/reset-password?token=${token}`;
+      console.log(`[Password Reset] Link for ${email}: ${resetLink}`);
+
+      return {
+        success: true,
+        message: "If an account exists with that email, a reset link has been sent.",
+        // Only include in dev mode
+        ...(process.env.NODE_ENV !== "production" ? { devToken: token, devLink: resetLink } : {}),
+      };
+    } catch (err) {
+      console.error("Password reset request error:", err);
+      return { success: false, error: "Something went wrong. Please try again." };
+    }
+  },
+);
+
+export const resetPassword = createServerFn({ method: "POST" }).handler(
+  async (data: unknown) => {
+    const { token, newPassword } = data as { token: string; newPassword: string };
+
+    if (!token || !newPassword) {
+      return { success: false, error: "Token and new password are required" };
+    }
+
+    if (newPassword.length < 8) {
+      return { success: false, error: "Password must be at least 8 characters" };
+    }
+
+    try {
+      const stored = resetTokens.get(token);
+      if (!stored || stored.expiresAt < Date.now()) {
+        resetTokens.delete(token);
+        return { success: false, error: "This reset link has expired. Please request a new one." };
+      }
+
+      const passwordHash = await hashPassword(newPassword);
+
+      if (process.env.DATABASE_URL) {
+        const { neon } = await import("@neondatabase/serverless");
+        const sql = neon(process.env.DATABASE_URL);
+        await sql`UPDATE users SET password_hash = ${passwordHash} WHERE email = ${stored.email}`;
+      } else {
+        const users = getUsers();
+        const idx = users.findIndex((u) => u.email === stored.email);
+        if (idx >= 0) {
+          users[idx].passwordHash = passwordHash;
+          saveUsers(users);
+        }
+      }
+
+      resetTokens.delete(token);
+      return { success: true, message: "Password has been reset. You can now log in." };
+    } catch (err) {
+      console.error("Password reset error:", err);
+      return { success: false, error: "Something went wrong. Please try again." };
+    }
+  },
+);

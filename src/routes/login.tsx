@@ -102,7 +102,12 @@ function LoginPage() {
           </button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-gray-500">
+        <p className="mt-4 text-center text-sm text-gray-500">
+          <Link to="/forgot-password" className="text-[#0E4F8B] hover:underline">
+            Forgot your password?
+          </Link>
+        </p>
+        <p className="mt-2 text-center text-sm text-gray-500">
           Don't have an account?{" "}
           <Link to="/signup" className="font-medium text-[#0E4F8B] hover:underline">
             Create one
