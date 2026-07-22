@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 120" role="img" aria-label="Global Mobilis">
+  <title>Global Mobilis</title>
+  <defs>
+    <linearGradient id="gm-globe-h" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0E4F8B"/>
+      <stop offset="55%" stop-color="#1B7A9B"/>
+      <stop offset="100%" stop-color="#0FA3A3"/>
+    </linearGradient>
+    <radialGradient id="gm-shine-h" cx="35%" cy="30%" r="65%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.22"/>
+      <stop offset="60%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Icon -->
+  <g>
+    <circle cx="60" cy="60" r="52" fill="url(#gm-globe-h)"/>
+    <circle cx="60" cy="60" r="52" fill="url(#gm-shine-h)"/>
+    <g stroke="#FFFFFF" stroke-width="1.4" fill="none" opacity="0.45" stroke-linecap="round">
+      <line x1="8" y1="60" x2="112" y2="60"/>
+      <ellipse cx="60" cy="60" rx="52" ry="20"/>
+      <ellipse cx="60" cy="60" rx="52" ry="38"/>
+      <line x1="60" y1="8" x2="60" y2="112"/>
+      <ellipse cx="60" cy="60" rx="20" ry="52"/>
+      <ellipse cx="60" cy="60" rx="38" ry="52"/>
+    </g>
+    <path d="M 18 86 Q 60 4 102 38" fill="none" stroke="#F4B860" stroke-width="6.5" stroke-linecap="round"/>
+    <circle cx="18" cy="86" r="7" fill="#F47B53"/>
+    <circle cx="18" cy="86" r="7" fill="none" stroke="#FFFFFF" stroke-width="2"/>
+  </g>
+
+  <!-- Wordmark -->
+  <g font-family="'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif"
+     font-weight="700"
+     letter-spacing="-1.5">
+    <text x="148" y="72" font-size="44" fill="#0E2A47">Global</text>
+    <text x="290" y="72" font-size="44" fill="#0FA3A3">Mobilis</text>
+  </g>
+</svg>
