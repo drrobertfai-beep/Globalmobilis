@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { SEED_DESTINATIONS } from "~/lib/destinations";
 import { uploadFile } from "~/lib/upload/server";
 
@@ -38,11 +38,11 @@ function DestinationDetailPage() {
   const [formCons, setFormCons] = useState("");
   const [formImage, setFormImage] = useState("");
   const [formVideo, setFormVideo] = useState("");
+  const [photoUploading, setPhotoUploading] = useState(false);
+  const [videoUploading, setVideoUploading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [reviewError, setReviewError] = useState("");
-
-  const dest = SEED_DESTINATIONS.find((d) => d.id === id) || null;
-
+  const photoInputRef = useRef<HTMLInputElement>(null);
+  const videoInputRef = useRef<HTMLInputElement>(null);
   // Load reviews when tab switches to Reviews
   useEffect(() => {
     if (activeTab === "Reviews") {
@@ -96,6 +96,34 @@ function DestinationDetailPage() {
       setReviewError("Failed to submit review");
     }
     setSubmitting(false);
+  };
+  const handleFileUpload = async (file: File, type: "photo" | "video") => {
+    if (type === "photo") setPhotoUploading(true);
+    else setVideoUploading(true);
+    try {
+      const reader = new FileReader();
+      const base64 = await new Promise<string>((resolve, reject) => {
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+      const result = await uploadFile({
+        fileName: file.name,
+        fileType: file.type,
+        fileBase64: base64,
+      });
+      if (result.success && result.url) {
+        if (type === "photo") setFormImage(result.url);
+        else setFormVideo(result.url);
+      } else {
+        setReviewError(result.error || "Upload failed");
+      }
+    } catch {
+      setReviewError("File upload failed");
+    } finally {
+      if (type === "photo") setPhotoUploading(false);
+      else setVideoUploading(false);
+    }
   };
 
   if (!dest) {
@@ -409,12 +437,32 @@ function DestinationDetailPage() {
 
                 <div>
                   <label className="block text-xs font-medium text-neutral-500 mb-1">Photo URL (optional)</label>
-                  <input value={formImage} onChange={(e) => setFormImage(e.target.value)} className="input text-sm" placeholder="https://example.com/photo.jpg" />
+                  <div className="flex gap-2">
+                    <input value={formImage} onChange={(e) => setFormImage(e.target.value)} className="input text-sm flex-1" placeholder="https://example.com/photo.jpg" />
+                    <label className="btn-secondary flex cursor-pointer items-center gap-1 text-sm">
+                      {photoUploading ? "Uploading..." : "📷 Upload"}
+                      <input type="file" accept="image/*" className="hidden" onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) handleFileUpload(file, "photo");
+                        e.target.value = "";
+                      }} />
+                    </label>
+                  </div>
                 </div>
 
                 <div>
                   <label className="block text-xs font-medium text-neutral-500 mb-1">Video URL (optional)</label>
-                  <input value={formVideo} onChange={(e) => setFormVideo(e.target.value)} className="input text-sm" placeholder="https://youtube.com/watch?v=..." />
+                  <div className="flex gap-2">
+                    <input value={formVideo} onChange={(e) => setFormVideo(e.target.value)} className="input text-sm flex-1" placeholder="https://youtube.com/watch?v=..." />
+                    <label className="btn-secondary flex cursor-pointer items-center gap-1 text-sm">
+                      {videoUploading ? "Uploading..." : "🎬 Upload"}
+                      <input type="file" accept="video/*" className="hidden" onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) handleFileUpload(file, "video");
+                        e.target.value = "";
+                      }} />
+                    </label>
+                  </div>
                 </div>
 
                 <button type="submit" disabled={submitting} className="btn-primary w-full">
