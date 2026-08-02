@@ -1,18 +1,27 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { listConversations, type ConversationView } from "~/lib/messages";
 
 export const Route = createFileRoute("/messages/")({
   component: MessagesPage,
 });
 
-const messages = [
-  { name: "Maria Santos", avatar: "MS", lastMsg: "I just arrived in Berlin! Would love to grab a coffee ☕", time: "2m ago", online: true, unread: true, color: "bg-brand-coral-500" },
-  { name: "James Wilson", avatar: "JW", lastMsg: "The visa process was actually pretty smooth", time: "1h ago", online: false, unread: false, color: "bg-brand-secondary-500" },
-  { name: "Yuki Tanaka", avatar: "YT", lastMsg: "Have you looked into the D7 visa?", time: "3h ago", online: true, unread: false, color: "bg-brand-gold-500" },
-  { name: "Toronto Tech Group", avatar: "TT", lastMsg: "New meetup announced for next Friday!", time: "5h ago", online: false, unread: true, color: "bg-brand-primary-500" },
-  { name: "Elena Petrova", avatar: "EP", lastMsg: "The apartment hunt in Lisbon is intense 😅", time: "1d ago", online: false, unread: false, color: "bg-brand-coral-700" },
-];
-
 function MessagesPage() {
+  const [conversations, setConversations] = useState<ConversationView[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const load = async () => {
+    const result = (await listConversations()) as unknown as ConversationView[];
+    setConversations(result);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    load();
+    const timer = setInterval(load, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <div className="pb-24">
       {/* Header */}
@@ -30,39 +39,66 @@ function MessagesPage() {
       </div>
 
       <div className="mx-auto max-w-6xl px-4 py-4 sm:px-6">
-        <div className="space-y-1">
-          {messages.map((msg) => (
-            <div
-              key={msg.name}
-              className="flex cursor-pointer items-center gap-3 rounded-2xl p-3 transition-colors hover:bg-neutral-50"
+        {loading ? (
+          <div className="space-y-3">
+            {[0, 1, 2].map((i) => (
+              <div key={i} className="h-16 animate-pulse rounded-2xl bg-neutral-100" />
+            ))}
+          </div>
+        ) : conversations.length === 0 ? (
+          <div className="card flex flex-col items-center gap-2 p-8 text-center">
+            <span className="text-3xl">💬</span>
+            <p className="text-sm text-neutral-500">
+              {conversations.length === 0 && !loading
+                ? "Sign in to message expats, or start a conversation from the Community page."
+                : "No conversations yet."}
+            </p>
+            <Link
+              to="/login"
+              className="mt-1 rounded-full bg-brand-primary-700 px-4 py-1.5 text-xs font-semibold text-white hover:bg-brand-primary-500"
             >
-              <div className="relative shrink-0">
-                <div className={`flex h-12 w-12 items-center justify-center rounded-full text-sm font-bold text-white ${msg.color}`}>
-                  {msg.avatar}
+              Sign in
+            </Link>
+          </div>
+        ) : (
+          <div className="space-y-1">
+            {conversations.map((conv) => (
+              <Link
+                key={conv.id}
+                to="/messages/$id"
+                params={{ id: conv.id }}
+                className="flex cursor-pointer items-center gap-3 rounded-2xl p-3 transition-colors hover:bg-neutral-50"
+              >
+                <div className="relative shrink-0">
+                  <div className={`flex h-12 w-12 items-center justify-center rounded-full text-sm font-bold text-white ${conv.participantColor}`}>
+                    {conv.participantAvatar}
+                  </div>
+                  {conv.participantOnline && (
+                    <div className="absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full border-2 border-white bg-green-500" />
+                  )}
                 </div>
-                {msg.online && (
-                  <div className="absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full border-2 border-white bg-green-500" />
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-bold text-neutral-700">{conv.participantName}</h3>
+                    <span className="text-[10px] text-neutral-500">{conv.lastTime}</span>
+                  </div>
+                  <p className={`truncate text-sm ${conv.unreadCount > 0 ? "font-medium text-neutral-700" : "text-neutral-500"}`}>
+                    {conv.lastMessage}
+                  </p>
+                </div>
+                {conv.unreadCount > 0 && (
+                  <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-coral-500 text-[10px] font-bold text-white">
+                    {conv.unreadCount}
+                  </div>
                 )}
-              </div>
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-bold text-neutral-700">{msg.name}</h3>
-                  <span className="text-[10px] text-neutral-500">{msg.time}</span>
-                </div>
-                <p className={`truncate text-sm ${msg.unread ? "font-medium text-neutral-700" : "text-neutral-500"}`}>
-                  {msg.lastMsg}
-                </p>
-              </div>
-              {msg.unread && (
-                <div className="h-2.5 w-2.5 shrink-0 rounded-full bg-brand-coral-500" />
-              )}
-            </div>
-          ))}
-        </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Bottom tab bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-neutral-200 bg-white">
+      <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-neutral-200 bg-white">
         <div className="mx-auto flex max-w-lg items-center justify-around py-2">
           {[
             { icon: "🏠", label: "Home", href: "/dashboard", active: false },

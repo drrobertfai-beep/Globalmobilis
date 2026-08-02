@@ -1,0 +1,46 @@
+[
+  {
+    "id": "c_ana",
+    "participantName": "Ana Silva",
+    "participantAvatar": "AS",
+    "participantColor": "bg-brand-coral-500",
+    "participantOnline": true,
+    "messages": [
+      { "id": "m_ana_1", "senderId": "seed_ana", "text": "Hey! I saw you're moving to Toronto too. I arrived last month! 🇨🇦", "timestamp": "2026-08-01T14:02:00.000Z", "read": true },
+      { "id": "m_ana_2", "senderId": "seed_ana", "text": "Happy to share my apartment-hunting experience if you need it.", "timestamp": "2026-08-01T14:05:00.000Z", "read": false },
+      { "id": "m_ana_3", "senderId": "seed_ana", "text": "There's a Toronto Tech Expats meetup next week — want to join?", "timestamp": "2026-08-02T09:30:00.000Z", "read": false }
+    ]
+  },
+  {
+    "id": "c_marcus",
+    "participantName": "Marcus Chen",
+    "participantAvatar": "MC",
+    "participantColor": "bg-brand-primary-500",
+    "participantOnline": false,
+    "messages": [
+      { "id": "m_marcus_1", "senderId": "seed_marcus", "text": "Thanks for the referral on the Lisbon job board!", "timestamp": "2026-07-31T18:12:00.000Z", "read": true },
+      { "id": "m_marcus_2", "senderId": "seed_marcus", "text": "I got an interview next Wednesday 🎉", "timestamp": "2026-07-31T18:15:00.000Z", "read": true }
+    ]
+  },
+  {
+    "id": "c_sarah",
+    "participantName": "Sarah Williams",
+    "participantAvatar": "SW",
+    "participantColor": "bg-brand-gold-500",
+    "participantOnline": true,
+    "messages": [
+      { "id": "m_sarah_1", "senderId": "seed_sarah", "text": "Did you decide between Berlin and Dublin yet?", "timestamp": "2026-08-01T10:40:00.000Z", "read": true },
+      { "id": "m_sarah_2", "senderId": "seed_sarah", "text": "Berlin is amazing for creatives — and much cheaper 😄", "timestamp": "2026-08-01T10:42:00.000Z", "read": true }
+    ]
+  },
+  {
+    "id": "c_felix",
+    "participantName": "Felix Müller",
+    "participantAvatar": "FM",
+    "participantColor": "bg-brand-secondary-500",
+    "participantOnline": false,
+    "messages": [
+      { "id": "m_felix_1", "senderId": "seed_felix", "text": "The visa workshop in the Global Nomads group is this Friday at 6 PM!", "timestamp": "2026-08-02T07:55:00.000Z", "read": true }
+    ]
+  }
+]
