@@ -19,7 +19,6 @@ export const Route = createFileRoute("/api/stripe-webhook")({
       POST: async ({ request }) => {
         const raw = await request.text();
         const signature = request.headers.get("stripe-signature") ?? "";
-        console.log("[stripe-webhook] POST raw:", raw.slice(0, 200), "sig:", signature);
 
         // Verify signature when the webhook secret is configured.
         if (process.env.STRIPE_WEBHOOK_SECRET) {
