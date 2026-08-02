@@ -365,7 +365,7 @@ function MediaPage() {
             </p>
           </div>
 
-          <div className="space-y-8">
+          <div className="grid gap-8 sm:grid-cols-2">
             {[
               {
                 title: "Global Mobilis — Version 1",
@@ -380,8 +380,14 @@ function MediaPage() {
                 <div className="bg-gradient-to-r from-[#0E4F8B] to-[#0FA3A3] px-6 py-4">
                   <h3 className="text-lg font-bold text-white">{video.title}</h3>
                 </div>
-                <div className="bg-black">
-                  <video controls className="mx-auto max-h-[500px] w-full" preload="metadata">
+                <div className="bg-black flex justify-center">
+                  <video
+                    controls
+                    className="mx-auto"
+                    style={{ maxHeight: "500px", aspectRatio: "9/16", objectFit: "contain" }}
+                    preload="metadata"
+                    playsInline
+                  >
                     <source src={video.url} type="video/mp4" />
                   </video>
                 </div>
