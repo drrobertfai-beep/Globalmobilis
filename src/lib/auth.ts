@@ -10,6 +10,7 @@ import { stringifyCookie, parseCookie } from "cookie";
 import { createServerFn } from "@tanstack/react-start";
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
+import { sendEmail, welcomeEmail, passwordResetEmail } from "./email";
 
 // =============================================================================
 // Configuration
@@ -193,6 +194,9 @@ export const signUp = createServerFn({ method: "POST" }).handler(
           subscriptionTier: user.subscription_tier,
         };
         const token = await createSessionToken(session);
+        // Fire-and-forget welcome email
+        const welcome = welcomeEmail(user.name);
+        sendEmail({ ...welcome, to: user.email }).catch(() => {});
         return { success: true, session, cookie: createSessionCookie(token) };
       }
 
@@ -221,6 +225,9 @@ export const signUp = createServerFn({ method: "POST" }).handler(
         subscriptionTier: newUser.subscriptionTier,
       };
       const token = await createSessionToken(session);
+      // Fire-and-forget welcome email
+      const welcome2 = welcomeEmail(newUser.name);
+      sendEmail({ ...welcome2, to: newUser.email }).catch(() => {});
       return { success: true, session, cookie: createSessionCookie(token) };
     } catch (err) {
       console.error("Signup error:", err);
@@ -354,9 +361,12 @@ export const requestPasswordReset = createServerFn({ method: "POST" }).handler(
         return { success: true, message: "If an account exists with that email, a reset link has been sent." };
       }
 
-      // In production, send an email. For now, return the token (dev only).
-      const resetLink = `${process.env.APP_URL || "http://localhost:3000"}/reset-password?token=${token}`;
-      console.log(`[Password Reset] Link for ${email}: ${resetLink}`);
+      // Send the reset email
+      const resetLink = `${process.env.APP_URL || "https://globalmobilis.vercel.app"}/reset-password?token=${token}`;
+      const resetEmail = passwordResetEmail(resetLink);
+      sendEmail({ ...resetEmail, to: email.toLowerCase() }).catch((err) => {
+        console.error("Failed to send password reset email:", err);
+      });
 
       return {
         success: true,
