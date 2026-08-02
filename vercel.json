@@ -2,5 +2,5 @@
   "buildCommand": "bash build-vercel.sh",
   "outputDirectory": ".vercel/output",
   "framework": null,
-  "installCommand": "bun install"
+  "installCommand": "npm install -g bun && bun install"
 }
