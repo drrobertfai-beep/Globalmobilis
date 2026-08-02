@@ -14,7 +14,7 @@ cd "$(dirname "$0")"
 umask 002
 
 echo "[1/3] vite build (light — safe under the sandbox memory cap)"
-bun run build
+~/.bun/bin/bun run build
 
 echo "[2/3] assemble .vercel/output (Build Output API v3)"
 rm -rf .vercel/output
@@ -23,7 +23,7 @@ cp -R dist/client .vercel/output/static
 rm -f .vercel/output/static/index.html   # SSR owns "/", not a static shell
 
 echo "[3/3] bundle SSR handler + deps into the render function"
-bun build vercel-entry.ts --target node \
+~/.bun/bin/bun build vercel-entry.ts --target node \
   --outfile .vercel/output/functions/render.func/index.mjs
 
 cat > .vercel/output/functions/render.func/.vc-config.json <<'JSON'
