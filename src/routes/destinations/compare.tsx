@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useMemo } from "react";
 import { SEED_DESTINATIONS } from "~/lib/destinations";
+import { PremiumGate } from "~/components/PremiumGate";
 import type { Destination } from "~/db.types";
 
 export const Route = createFileRoute("/destinations/compare")({
@@ -80,7 +81,7 @@ function ScoreCell({ value, isBest }: { value: number; isBest: boolean }) {
   );
 }
 
-function CompareDestinationsPage() {
+function CompareDestinationsContent() {
   const [selected, setSelected] = useState<string[]>(["", "", ""]);
   const destinations = useMemo(
     () => selected.map((id) => SEED_DESTINATIONS.find((d) => d.id === id) || null),
@@ -285,5 +286,17 @@ function CompareDestinationsPage() {
         </div>
       )}
     </div>
+  );
+}
+
+/**
+ * Premium-only feature: free users see the upgrade prompt via PremiumGate;
+ * subscribed users get the full comparison tool.
+ */
+function CompareDestinationsPage() {
+  return (
+    <PremiumGate>
+      <CompareDestinationsContent />
+    </PremiumGate>
   );
 }

@@ -1,5 +1,7 @@
 import Stripe from "stripe";
 import { createServerFn } from "@tanstack/react-start";
+import { getCookie } from "@tanstack/react-start/server";
+import { SESSION_COOKIE, verifySessionToken } from "~/lib/auth";
 
 const PRICE_IDS: Record<string, string> = {
   monthly: process.env.STRIPE_PRICE_MONTHLY || "",
@@ -14,9 +16,8 @@ const getStripe = () => {
 
 export const createCheckoutSession = createServerFn({ method: "POST" }).handler(
   async (data: unknown) => {
-    const { priceId, userId, cancelUrl, successUrl } = data as {
-      priceId: string;
-      userId?: string;
+    const { planId, cancelUrl, successUrl } = data as {
+      planId?: string;
       cancelUrl?: string;
       successUrl?: string;
     };
@@ -30,13 +31,32 @@ export const createCheckoutSession = createServerFn({ method: "POST" }).handler(
       };
     }
 
+    // Resolve the price from env (STRIPE_PRICE_MONTHLY / STRIPE_PRICE_YEARLY).
+    const priceId = planId === "yearly" ? PRICE_IDS.yearly : PRICE_IDS.monthly;
+    if (!priceId) {
+      return {
+        success: false,
+        url: null,
+        error: "Stripe price IDs are not configured — add STRIPE_PRICE_MONTHLY / STRIPE_PRICE_YEARLY.",
+      };
+    }
+
+    // Resolve the logged-in user from the session cookie so the webhook can
+    // attribute the upgrade (metadata.userId).
+    const token = getCookie(SESSION_COOKIE);
+    let userId: string | undefined;
+    if (token) {
+      const session = await verifySessionToken(token);
+      userId = session?.userId;
+    }
+
     try {
       const session = await stripe.checkout.sessions.create({
         mode: "subscription",
         line_items: [{ price: priceId, quantity: 1 }],
         customer_email: undefined,
         metadata: { userId: userId || "anonymous" },
-        success_url: successUrl || `${process.env.SITE_URL || "https://globalmobilis.com"}/dashboard?checkout=success`,
+        success_url: successUrl || `${process.env.SITE_URL || "https://globalmobilis.com"}/premium?checkout=success`,
         cancel_url: cancelUrl || `${process.env.SITE_URL || "https://globalmobilis.com"}/premium?checkout=cancelled`,
       });
 

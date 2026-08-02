@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { LogoIcon } from "~/components/Logo";
+import { PremiumBadge } from "~/components/PremiumBadge";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -40,6 +41,7 @@ export function Header() {
 
         {/* Auth buttons */}
         <div className="flex items-center gap-3">
+          <PremiumBadge />
           <Link
             to="/login"
             className="rounded-full border border-gray-200 px-5 py-2 text-sm font-semibold text-gray-700 transition-all hover:border-gray-300 hover:shadow-md"

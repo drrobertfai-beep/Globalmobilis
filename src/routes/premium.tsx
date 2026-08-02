@@ -1,12 +1,24 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { createCheckoutSession } from "~/lib/stripe";
+import {
+  activatePremium,
+  getPremiumStatus,
+} from "~/lib/premium";
+
+
+
+
+import type { PremiumStatus } from "~/lib/premium";
 
 export const Route = createFileRoute("/premium")({
   component: PremiumPage,
 });
 
+// Stripe payment links — used as the fallback when the Stripe API keys aren't
+// configured yet (createCheckoutSession returns an error) or for guests.
 const STRIPE_MONTHLY = "https://buy.stripe.com/00weVd3lS0wPg6U7vO9EI02";
 const STRIPE_YEARLY = "https://buy.stripe.com/9B6cN53lS0wP3k8bM49EI03";
-
 const plans = [
   {
     id: "monthly",
@@ -49,6 +61,62 @@ const plans = [
 ];
 
 function PremiumPage() {
+  const [status, setStatus] = useState<PremiumStatus | null>(null);
+  const [busyPlan, setBusyPlan] = useState<string | null>(null);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
+  const [activating, setActivating] = useState(false);
+  const [activated, setActivated] = useState(false);
+
+  const search = Route.useSearch() as { checkout?: string };
+  const checkoutParam = search.checkout;
+
+  useEffect(() => {
+    let mounted = true;
+    getPremiumStatus().then((s) => {
+      if (mounted) setStatus(s);
+    });
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const startCheckout = async (plan: (typeof plans)[number]) => {
+    setBusyPlan(plan.id);
+    setCheckoutError(null);
+
+    // Guests: send them to sign in first so their purchase can be linked.
+    if (!status?.loggedIn) {
+      window.location.href = `/login?next=/premium`;
+      return;
+    }
+
+    const base = `${window.location.origin}`;
+    const res = await createCheckoutSession({
+      planId: plan.id,
+      cancelUrl: `${base}/premium?checkout=cancelled`,
+      successUrl: `${base}/premium?checkout=success`,
+    });
+
+    if (res.success && res.url) {
+      window.location.href = res.url;
+    } else {
+      // Stripe API keys not configured — fall back to the hosted payment link.
+      window.location.href = plan.stripeUrl;
+    }
+  };
+
+  const completeActivation = async () => {
+    setActivating(true);
+    const res = await activatePremium();
+    setActivating(false);
+    if (res.success) {
+      setActivated(true);
+      setStatus(res.status);
+    } else {
+      setCheckoutError(res.error ?? "Activation failed. Please try again.");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[var(--gm-bg)] pb-24">
       {/* Header */}
@@ -63,6 +131,78 @@ function PremiumPage() {
             get expert advice, translate anything, and connect with a global community.
           </p>
         </div>
+      </div>
+
+      {/* Subscription status */}
+      <div className="mx-auto mt-8 max-w-4xl px-4">
+        {status?.subscribed ? (
+          <div className="flex flex-col items-center justify-between gap-3 rounded-2xl border border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50 px-6 py-4 sm:flex-row">
+            <div className="flex items-center gap-3">
+              <span className="text-2xl">⭐</span>
+              <div>
+                <p className="text-sm font-bold text-neutral-700">
+                  You're {activated ? "now" : ""} a Premium member{status.planLabel ? ` — ${status.planLabel}` : ""} 🎉
+                </p>
+                <p className="text-xs text-neutral-500">
+                  All premium features are unlocked for {status.name || "your account"}.
+                </p>
+              </div>
+            </div>
+            <Link
+              to="/destinations/compare"
+              className="rounded-xl bg-gradient-to-r from-brand-primary-600 to-brand-secondary-600 px-5 py-2.5 text-sm font-bold text-white shadow hover:opacity-95"
+            >
+              Try Compare Tool
+            </Link>
+          </div>
+        ) : (
+          <div className="flex items-center gap-3 rounded-2xl border border-neutral-200 bg-white px-6 py-4">
+            <span className="text-xl">🔓</span>
+            <div>
+              <p className="text-sm font-semibold text-neutral-700">
+                You're on the Free plan
+              </p>
+              <p className="text-xs text-neutral-500">
+                {status?.loggedIn
+                  ? "Upgrade to unlock advanced comparisons, expert consultations, and more."
+                  : "Sign in and upgrade to unlock advanced comparisons, expert consultations, and more."}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Post-checkout banner */}
+        {(checkoutParam === "success" || activated) && (
+          <div className="mt-4 rounded-2xl border border-green-200 bg-green-50 px-6 py-4">
+            <p className="text-sm font-semibold text-green-800">
+              ✅ Payment received{activated ? " and premium activated" : ""}!
+            </p>
+            <p className="mt-1 text-xs text-green-700">
+              {status?.subscribed
+                ? "Your account is fully upgraded. Enjoy premium!"
+                : "Your payment went through. Activate premium on your account to unlock everything."}
+            </p>
+            {!status?.subscribed && (
+              <button
+                onClick={completeActivation}
+                disabled={activating}
+                className="mt-3 rounded-xl bg-green-600 px-5 py-2 text-sm font-bold text-white transition-colors hover:bg-green-700 disabled:opacity-60"
+              >
+                {activating ? "Activating…" : "Activate Premium on my account"}
+              </button>
+            )}
+          </div>
+        )}
+        {checkoutParam === "cancelled" && !activated && (
+          <div className="mt-4 rounded-2xl border border-neutral-200 bg-neutral-50 px-6 py-4 text-sm text-neutral-600">
+            Checkout was cancelled — no charge was made. You can try again anytime.
+          </div>
+        )}
+        {checkoutError && (
+          <div className="mt-4 rounded-2xl border border-red-200 bg-red-50 px-6 py-3 text-sm font-medium text-red-700">
+            {checkoutError}
+          </div>
+        )}
       </div>
 
       {/* Plans grid */}
@@ -87,7 +227,6 @@ function PremiumPage() {
                   <span className="text-4xl font-bold text-neutral-700">${plan.price}</span>
                   <span className="text-sm text-neutral-500">{plan.period}</span>
                 </div>
-
                 <div className="mt-8 space-y-3">
                   {plan.features.map((feature) => (
                     <div key={feature} className="flex items-start gap-3">
@@ -99,18 +238,27 @@ function PremiumPage() {
                   ))}
                 </div>
               </div>
-
               <div className="border-t border-neutral-100 bg-neutral-50/50 px-6 py-4">
-                <a
-                  href={plan.stripeUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`btn w-full text-center inline-block ${
-                    plan.highlighted ? "btn-primary" : "btn-secondary"
-                  }`}
-                >
-                  Subscribe — ${plan.price}{plan.period}
-                </a>
+                {status?.subscribed ? (
+                  <button
+                    disabled
+                    className="btn w-full cursor-default text-center inline-block bg-green-100 text-green-800"
+                  >
+                    ✓ Current Plan
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => startCheckout(plan)}
+                    disabled={busyPlan === plan.id}
+                    className={`btn w-full text-center inline-block ${
+                      plan.highlighted ? "btn-primary" : "btn-secondary"
+                    }`}
+                  >
+                    {busyPlan === plan.id
+                      ? "Redirecting…"
+                      : `Subscribe — $${plan.price}${plan.period}`}
+                  </button>
+                )}
               </div>
             </div>
           ))}
