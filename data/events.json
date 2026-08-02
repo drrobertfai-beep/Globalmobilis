@@ -1,0 +1,44 @@
+[
+  {
+    "id": "e_remote_lisbon",
+    "groupId": "g_global_nomads",
+    "groupName": "Global Nomads",
+    "title": "Remote Work in Lisbon",
+    "description": "Meet fellow nomads, compare visas and share the best co-working spots in Lisbon.",
+    "date": "2026-08-15",
+    "time": "6:00 PM",
+    "location": "Lisbon, Portugal",
+    "baseAttendees": 34,
+    "attendeeIds": [],
+    "createdBy": "seed_admin_nomads",
+    "createdAt": "2026-06-01T00:00:00.000Z"
+  },
+  {
+    "id": "e_toronto_meetup",
+    "groupId": "g_toronto_tech",
+    "groupName": "Toronto Tech Expats",
+    "title": "Toronto Tech Meetup",
+    "description": "Monthly meetup — talks, hiring boards and demos from the community.",
+    "date": "2026-08-20",
+    "time": "2:00 PM",
+    "location": "Toronto, Canada",
+    "baseAttendees": 56,
+    "attendeeIds": [],
+    "createdBy": "seed_admin_toronto",
+    "createdAt": "2026-06-10T00:00:00.000Z"
+  },
+  {
+    "id": "e_berlin_pitch",
+    "groupId": "g_berlin_creatives",
+    "groupName": "Berlin Creatives",
+    "title": "Berlin Startup Pitch Night",
+    "description": "Creative founders pitch to a friendly room. Beers and feedback included.",
+    "date": "2026-08-27",
+    "time": "7:00 PM",
+    "location": "Berlin, Germany",
+    "baseAttendees": 28,
+    "attendeeIds": [],
+    "createdBy": "seed_admin_berlin",
+    "createdAt": "2026-06-15T00:00:00.000Z"
+  }
+]
