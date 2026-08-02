@@ -5,23 +5,11 @@
  * Tracks page views automatically and key business events.
  */
 
-const API_KEY = process.env.SIMPLEANALYTICS_API_KEY || "";
-
 // ── Script injection (called once in root layout) ────
 
 export function AnalyticsScript() {
-  if (!API_KEY) return null;
   return (
-    <>
-      <script async defer src="https://scripts.simpleanalyticscdn.com/latest.js" />
-      <noscript>
-        <img
-          src={`https://queue.simpleanalyticscdn.com/noscript.gif?api_key=${API_KEY}`}
-          alt=""
-          referrerPolicy="no-referrer-when-downgrade"
-        />
-      </noscript>
-    </>
+    <script async src="https://scripts.simpleanalyticscdn.com/latest.js" />
   );
 }
 
