@@ -4,8 +4,8 @@ export const Route = createFileRoute("/premium")({
   component: PremiumPage,
 });
 
-const STRIPE_MONTHLY = "https://buy.stripe.com/5kQ00j2hOcfx3k8aI09EI00";
-const STRIPE_YEARLY = "https://buy.stripe.com/3cI6oH8GcgvN07WdUc9EI01";
+const STRIPE_MONTHLY = "https://buy.stripe.com/00weVd3lS0wPg6U7vO9EI02";
+const STRIPE_YEARLY = "https://buy.stripe.com/9B6cN53lS0wP3k8bM49EI03";
 
 const plans = [
   {
