@@ -41,10 +41,8 @@ function DestinationDetailPage() {
   const [photoUploading, setPhotoUploading] = useState(false);
   const [videoUploading, setVideoUploading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [reviewError, setReviewError] = useState("");
   const photoInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
-  const dest = SEED_DESTINATIONS.find((d) => d.id === id);
   // Load reviews when tab switches to Reviews
   useEffect(() => {
     if (activeTab === "Reviews") {
