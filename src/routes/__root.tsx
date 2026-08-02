@@ -9,6 +9,7 @@ import type { ReactNode } from "react";
 import appCss from "~/styles/app.css?url";
 import { Header } from "~/components/Header";
 import { Footer } from "~/components/Footer";
+import { AnalyticsScript } from "~/lib/analytics";
 
 export const Route = createRootRoute({
   head: () => ({
@@ -73,6 +74,7 @@ function RootDocument({ children }: { children: ReactNode }) {
     <html lang="en">
       <head>
         <HeadContent />
+        <AnalyticsScript />
       </head>
       <body className="bg-white antialiased">
         <Header />
