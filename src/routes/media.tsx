@@ -369,11 +369,11 @@ function MediaPage() {
             {[
               {
                 title: "Global Mobilis — Version 1",
-                url: "https://nyz3d0uniiwojldf.public.blob.vercel-storage.com/Global%20mobilis%20new%20videos/1e084fc3de3841764b68540e9e0373f4.MP4",
+                url: "https://nyz3d0uniiwojldf.public.blob.vercel-storage.com/Global%20mobilis%20new%20videos/1e084fc3de3841764b68540e9e0373f4.mov",
               },
               {
                 title: "Global Mobilis — Version 2",
-                url: "https://nyz3d0uniiwojldf.public.blob.vercel-storage.com/Global%20mobilis%20new%20videos/ac33be5929f8383cb53f6e7630275b6e.MP4",
+                url: "https://nyz3d0uniiwojldf.public.blob.vercel-storage.com/Global%20mobilis%20new%20videos/ac33be5929f8383cb53f6e7630275b6e.mov",
               },
             ].map((video) => (
               <div key={video.title} className="overflow-hidden rounded-2xl bg-white shadow-lg">
