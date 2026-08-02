@@ -215,6 +215,46 @@ export const activatePremium = createServerFn({ method: "POST" }).handler(
 );
 
 /**
+ * Process a Stripe webhook event (checkout.session.completed → upgrade user).
+ * Plain async function so both the createServerFn wrapper and the raw
+ * /api/stripe-webhook HTTP route can call it directly (a createServerFn called
+ * in-process wraps arguments differently, so raw handlers should use this).
+ * Re-invocable — upgrading an already-premium user is a no-op success.
+ */
+export async function handleStripeWebhookEvent(
+  payload: unknown,
+): Promise<StripeWebhookResult> {
+  const event = (payload ?? {}) as {
+    type?: string;
+    data?: { object?: { metadata?: Record<string, string> } };
+  };
+  if (!event || event.type !== "checkout.session.completed") {
+    return {
+      received: true,
+      handled: false,
+      reason: `Unhandled event type: ${event?.type ?? "unknown"}`,
+    };
+  }
+  const userId = event.data?.object?.metadata?.userId;
+  if (!userId) {
+    return {
+      received: true,
+      handled: false,
+      reason: "checkout.session.completed without metadata.userId",
+    };
+  }
+  const upgraded = await upgradeUserToPremium(userId);
+  return {
+    received: true,
+    handled: true,
+    upgraded,
+    reason: upgraded
+      ? "User upgraded to premium"
+      : "Payment received but user not found in store",
+  };
+}
+
+/**
  * Stripe webhook handler (checkout.session.completed → upgrade user to premium).
  * Expects the standard Stripe event shape; the userId is read from
  * `data.object.metadata.userId`, which `createCheckoutSession` stamps on the
@@ -222,34 +262,7 @@ export const activatePremium = createServerFn({ method: "POST" }).handler(
  */
 export const handleStripeWebhook = createServerFn({ method: "POST" }).handler(
   async (payload: unknown): Promise<StripeWebhookResult> => {
-    const event = (payload ?? {}) as {
-      type?: string;
-      data?: { object?: { metadata?: Record<string, string> } };
-    };
-    if (!event || event.type !== "checkout.session.completed") {
-      return {
-        received: true,
-        handled: false,
-        reason: `Unhandled event type: ${event?.type ?? "unknown"}`,
-      };
-    }
-    const userId = event.data?.object?.metadata?.userId;
-    if (!userId) {
-      return {
-        received: true,
-        handled: false,
-        reason: "checkout.session.completed without metadata.userId",
-      };
-    }
-    const upgraded = await upgradeUserToPremium(userId);
-    return {
-      received: true,
-      handled: true,
-      upgraded,
-      reason: upgraded
-        ? "User upgraded to premium"
-        : "Payment received but user not found in store",
-    };
+    return handleStripeWebhookEvent(payload);
   },
 );
 
