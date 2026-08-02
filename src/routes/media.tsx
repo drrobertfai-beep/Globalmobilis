@@ -7,11 +7,11 @@ export const Route = createFileRoute("/media")({
 const videos = [
   {
     title: "Global Mobilis — Version 1",
-    url: "https://lbweneps5eo88ldi.private.blob.vercel-storage.com/708A24B5-F15E-4371-B37A-0242875978DB.MP4?vercel-blob-valid-until=1785692296432&vercel-blob-delegation=eyJzdG9yZUlkIjoic3RvcmVfbEJXRW5FcHM1RW84OExESSIsIm93bmVySWQiOiJ0ZWFtXzBqS2JERnJkREdkMHF5bnBSbFlzck1EcCIsInBhdGhuYW1lIjoiKiIsIm9wZXJhdGlvbnMiOlsiZ2V0IiwiaGVhZCJdLCJ2YWxpZFVudGlsIjoxNzg1NzM1NDIxNTI4LCJpYXQiOjE3ODU2OTIyMjI1MTF9.1e-Ft9Y9VrH7ID6DFKtUVYAdYQea8eZWqkq5p-aAlsI&vercel-blob-signature=3S0tG18kwVf_fY7IomkfVVLWxpHah7wAnen9SspQIo0",
+    url: "https://nyz3d0uniiwojldf.public.blob.vercel-storage.com/708A24B5-F15E-4371-B37A-0242875978DB.MP4",
   },
   {
     title: "Global Mobilis — Version 2",
-    url: "https://lbweneps5eo88ldi.private.blob.vercel-storage.com/EBE90EB5-352E-4242-9F0D-208892FFB95E.MP4?vercel-blob-valid-until=1785692483510&vercel-blob-delegation=eyJzdG9yZUlkIjoic3RvcmVfbEJXRW5FcHM1RW84OExESSIsIm93bmVySWQiOiJ0ZWFtXzBqS2JERnJkREdkMHF5bnBSbFlzck1EcCIsInBhdGhuYW1lIjoiKiIsIm9wZXJhdGlvbnMiOlsiZ2V0IiwiaGVhZCJdLCJ2YWxpZFVudGlsIjoxNzg1NzM1NDIxNTI4LCJpYXQiOjE3ODU2OTIyMjI1MTF9.1e-Ft9Y9VrH7ID6DFKtUVYAdYQea8eZWqkq5p-aAlsI&vercel-blob-signature=pxNehI5UaYQxSuzldGQf87cKWt4SV1a27UMEWRY0lUM",
+    url: "https://nyz3d0uniiwojldf.public.blob.vercel-storage.com/EBE90EB5-352E-4242-9F0D-208892FFB95E.MP4",
   },
 ];
 
