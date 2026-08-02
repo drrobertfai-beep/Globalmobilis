@@ -301,6 +301,55 @@ function MediaPage() {
         </div>
       </div>
 
+      {/* ═══ PHOTO SHOWCASE ═══ */}
+      <div className="bg-white py-20 sm:py-28">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6">
+          <div className="mb-12 text-center">
+            <span className="mb-4 inline-block rounded-full bg-[#0FA3A3]/10 px-4 py-1.5 text-sm font-medium text-[#0FA3A3]">
+              App Preview
+            </span>
+            <h2 className="mb-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+              Inside Global Mobilis
+            </h2>
+            <p className="mx-auto max-w-2xl text-gray-600">
+              Take a peek at the platform that's helping thousands make their move.
+            </p>
+          </div>
+
+          <div className="grid gap-8 sm:grid-cols-2">
+            {[
+              {
+                src: "https://nyz3d0uniiwojldf.public.blob.vercel-storage.com/Global%20mobilis%20new%20videos/20260802_194200_36a67560.PNG",
+                alt: "Global Mobilis app screenshot - destinations",
+                caption: "Explore 200+ destinations with detailed guides",
+              },
+              {
+                src: "https://nyz3d0uniiwojldf.public.blob.vercel-storage.com/Global%20mobilis%20new%20videos/20260802_201220_6e3d0fe0.PNG",
+                alt: "Global Mobilis app screenshot - community",
+                caption: "Connect with expat communities worldwide",
+              },
+            ].map((img, i) => (
+              <div
+                key={img.alt}
+                className="group overflow-hidden rounded-2xl bg-white shadow-lg opacity-0 animate-fade-in-up"
+                style={{ animationDelay: `${i * 0.2}s`, animationFillMode: "forwards" }}
+              >
+                <div className="aspect-[4/3] overflow-hidden">
+                  <img
+                    src={img.src}
+                    alt={img.alt}
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                </div>
+                <div className="border-t border-gray-100 px-6 py-4">
+                  <p className="text-sm text-gray-600">{img.caption}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* ═══ PROMO VIDEOS ═══ */}
       <div ref={videoRef} id="videos" className="bg-[#F0F9FF] py-20 sm:py-28">
         <div className="mx-auto max-w-4xl px-4 sm:px-6">
@@ -320,11 +369,11 @@ function MediaPage() {
             {[
               {
                 title: "Global Mobilis — Version 1",
-                url: "https://nyz3d0uniiwojldf.public.blob.vercel-storage.com/708A24B5-F15E-4371-B37A-0242875978DB.MP4",
+                url: "https://nyz3d0uniiwojldf.public.blob.vercel-storage.com/Global%20mobilis%20new%20videos/1e084fc3de3841764b68540e9e0373f4.MP4",
               },
               {
                 title: "Global Mobilis — Version 2",
-                url: "https://nyz3d0uniiwojldf.public.blob.vercel-storage.com/EBE90EB5-352E-4242-9F0D-208892FFB95E.MP4",
+                url: "https://nyz3d0uniiwojldf.public.blob.vercel-storage.com/Global%20mobilis%20new%20videos/ac33be5929f8383cb53f6e7630275b6e.MP4",
               },
             ].map((video) => (
               <div key={video.title} className="overflow-hidden rounded-2xl bg-white shadow-lg">
