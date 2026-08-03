@@ -1,9 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { signUp } from "~/lib/auth";
 
 export const Route = createFileRoute("/signup")({
   component: SignupPage,
+  validateSearch: (search: Record<string, unknown>) => ({
+    ref: (search.ref as string) || "",
+  }),
 });
 
 function SignupPage() {
@@ -13,6 +16,20 @@ function SignupPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [refCode, setRefCode] = useState("");
+
+  useEffect(() => {
+    // Get referral code from URL or cookie
+    const urlParams = new URLSearchParams(window.location.search);
+    const ref = urlParams.get("ref");
+    if (ref) {
+      setRefCode(ref);
+      document.cookie = `gm_ref=${ref}; path=/; max-age=86400`; // 24 hours
+    } else {
+      const match = document.cookie.match(/gm_ref=([^;]+)/);
+      if (match) setRefCode(match[1]);
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,7 +37,7 @@ function SignupPage() {
     setLoading(true);
 
     try {
-      const result = await signUp({ email, password, name }) as any;
+      const result = await signUp({ email, password, name, referralCode: refCode || undefined }) as any;
       if (result.success) {
         setSuccess(true);
         document.cookie = result.cookie;

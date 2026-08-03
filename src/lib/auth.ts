@@ -11,6 +11,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { sendEmail, welcomeEmail, passwordResetEmail } from "./email";
+import { recordReferralSignup } from "./referral";
 
 // =============================================================================
 // Configuration
@@ -153,10 +154,11 @@ export function parseCookies(cookieHeader: string | null): Record<string, string
 
 export const signUp = createServerFn({ method: "POST" }).handler(
   async (data: unknown) => {
-    const { email, password, name } = data as {
+    const { email, password, name, referralCode } = data as {
       email: string;
       password: string;
       name: string;
+      referralCode?: string;
     };
 
     if (!email || !password || !name) {
@@ -197,6 +199,10 @@ export const signUp = createServerFn({ method: "POST" }).handler(
         // Fire-and-forget welcome email
         const welcome = welcomeEmail(user.name);
         sendEmail({ ...welcome, to: user.email }).catch(() => {});
+        // Process referral if present
+        if (referralCode) {
+          recordReferralSignup(referralCode, user.id, user.email);
+        }
         return { success: true, session, cookie: createSessionCookie(token) };
       }
 
@@ -228,6 +234,10 @@ export const signUp = createServerFn({ method: "POST" }).handler(
       // Fire-and-forget welcome email
       const welcome2 = welcomeEmail(newUser.name);
       sendEmail({ ...welcome2, to: newUser.email }).catch(() => {});
+      // Process referral if present
+      if (referralCode) {
+        recordReferralSignup(referralCode, newUser.id, newUser.email);
+      }
       return { success: true, session, cookie: createSessionCookie(token) };
     } catch (err) {
       console.error("Signup error:", err);

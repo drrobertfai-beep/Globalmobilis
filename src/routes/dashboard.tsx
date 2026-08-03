@@ -11,12 +11,21 @@ export const Route = createFileRoute("/dashboard")({
 function DashboardPage() {
   const [destinations, setDestinations] = useState<Destination[]>([]);
   const [loading, setLoading] = useState(true);
+  const [referral, setReferral] = useState<any>(null);
 
   useEffect(() => {
     getFeaturedDestinations().then((data) => {
       setDestinations(data as unknown as Destination[]);
       setLoading(false);
     });
+
+    // Fetch referral progress
+    fetch("/api/referral")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.code) setReferral(data);
+      })
+      .catch(() => {});
   }, []);
 
   return (
@@ -78,6 +87,52 @@ function DashboardPage() {
           </div>
           <span className="rounded-full bg-[#F4B860] px-4 py-1.5 text-sm font-semibold text-[#0A1F3F]">Start →</span>
         </Link>
+
+        {/* Referral progress */}
+        {referral && (
+          <div className="rounded-2xl border border-gray-200 bg-white p-5">
+            <div className="mb-3 flex items-center justify-between">
+              <h3 className="font-bold text-gray-900">🎁 Invite Friends</h3>
+              {referral.progress.completed ? (
+                <span className="rounded-full bg-green-100 px-3 py-0.5 text-xs font-semibold text-green-700">Unlocked!</span>
+              ) : (
+                <span className="text-sm text-gray-500">{referral.progress.count}/{referral.progress.needed}</span>
+              )}
+            </div>
+            <p className="mb-3 text-sm text-gray-600">
+              {referral.progress.completed
+                ? "You've earned premium early access! Share your link to help more friends."
+                : `Invite ${referral.progress.needed - referral.progress.count} more friend${referral.progress.needed - referral.progress.count !== 1 ? "s" : ""} to unlock premium early access.`}
+            </p>
+            <div className="mb-3 h-2 overflow-hidden rounded-full bg-gray-200">
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-[#0FA3A3] to-[#F4B860] transition-all"
+                style={{ width: `${Math.min(100, (referral.progress.count / referral.progress.needed) * 100)}%` }}
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                readOnly
+                value={`https://globalmobilis.com/r/${referral.code}`}
+                className="flex-1 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-xs text-gray-600"
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  const url = `https://globalmobilis.com/r/${referral.code}`;
+                  navigator.clipboard.writeText(url).then(() => {
+                    const btn = document.activeElement as HTMLElement;
+                    if (btn) { btn.textContent = "✓"; setTimeout(() => { btn.textContent = "Copy"; }, 1500); }
+                  });
+                }}
+                className="rounded-lg bg-[#0E4F8B] px-4 py-2 text-xs font-semibold text-white hover:bg-[#1B7A9B]"
+              >
+                Copy
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Featured destination hero */}
         {!loading && destinations.length > 0 && (
