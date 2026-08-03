@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { submitSurveyResponse } from "~/lib/survey";
 
 export const Route = createFileRoute("/survey")({
   component: SurveyPage,
@@ -65,15 +64,23 @@ function SurveyPage() {
     setLoading(true);
     setError("");
     try {
-      submitSurveyResponse({
-        email: email.trim(),
-        destination_interest: destination.trim() || undefined,
-        biggest_frustration: frustration.trim(),
-        premium_features: premiumFeatures,
-        max_monthly_payment: maxPayment,
-        payment_preference: (paymentPref as "subscription" | "one_time" | "not_sure") || "not_sure",
-        mentor_consultation_likelihood: mentorLikelihood,
+      const res = await fetch("/api/survey", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: email.trim(),
+          destination_interest: destination.trim() || undefined,
+          biggest_frustration: frustration.trim(),
+          premium_features: premiumFeatures,
+          max_monthly_payment: maxPayment,
+          payment_preference: paymentPref || "not_sure",
+          mentor_consultation_likelihood: mentorLikelihood,
+        }),
       });
+      const data = await res.json();
+      if (!res.ok || data.error) {
+        throw new Error(data.error || "Something went wrong");
+      }
       setSubmitted(true);
     } catch (e: any) {
       setError(e.message || "Something went wrong. Please try again.");
