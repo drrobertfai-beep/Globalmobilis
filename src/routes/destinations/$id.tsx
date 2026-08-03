@@ -4,6 +4,29 @@ import { SEED_DESTINATIONS } from "~/lib/destinations";
 import { getDestinationResources, type School, type CommunityLink, type JobBoard, type HousingSite } from "~/lib/destination-resources";
 
 export const Route = createFileRoute("/destinations/$id")({
+  loader: ({ params }) => ({
+    dest: SEED_DESTINATIONS.find((d) => d.id === params.id) ?? null,
+  }),
+  head: ({ loaderData }) => {
+    const dest = loaderData.dest;
+    const cityCountry = dest ? `${dest.city}, ${dest.country}` : "Destination";
+    const year = new Date().getFullYear();
+    const desc =
+      dest?.short_description ??
+      "Compare quality of life, jobs, cost of living, visas, and more across 36 cities worldwide with Global Mobilis.";
+    return {
+      meta: [
+        { title: `${cityCountry} (${year}) — Global Mobilis` },
+        { name: "description", content: desc },
+        { property: "og:title", content: `Move to ${cityCountry} — Global Mobilis` },
+        { property: "og:description", content: desc },
+        { property: "og:type", content: "website" },
+        { name: "twitter:card", content: "summary" },
+        { name: "twitter:title", content: `${cityCountry} — Global Mobilis` },
+        { name: "twitter:description", content: desc },
+      ],
+    };
+  },
   component: DestinationDetailPage,
 });
 

@@ -15,6 +15,16 @@ import { listThreads, type ThreadView } from "~/lib/forums";
 import { BottomNav } from "~/components/BottomNav";
 
 export const Route = createFileRoute("/community/")({
+  head: () => ({
+    meta: [
+      { title: "Expat Community & Forums — Global Mobilis" },
+      {
+        name: "description",
+        content:
+          "Join verified expat communities, groups, events, and forums. Connect with people who have made the move — Global Mobilis.",
+      },
+    ],
+  }),
   component: CommunityPage,
 });
 

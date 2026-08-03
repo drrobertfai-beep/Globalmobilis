@@ -7,6 +7,16 @@ import { getMyTimeline, type TimelineDetail } from "~/lib/timeline";
 import type { Destination } from "~/db.types";
 
 export const Route = createFileRoute("/dashboard")({
+  head: () => ({
+    meta: [
+      { title: "Global Mobilis — Your Global Journey Starts Here" },
+      {
+        name: "description",
+        content:
+          "Your personalized Global Mobilis dashboard — relocation timelines, destination insights, and expat community in one place.",
+      },
+    ],
+  }),
   component: DashboardPage,
 });
 
