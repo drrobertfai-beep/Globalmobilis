@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 
 import { BottomNav } from "~/components/BottomNav";
+import { getMyPoints, type UserPoints } from "~/lib/points";
 export const Route = createFileRoute("/profile")({
   component: ProfilePage,
 });
@@ -14,6 +16,18 @@ const journeyStops = [
 const interests = ["Remote Work", "Photography", "Hiking", "Languages", "Cuisine", "Startups", "Yoga", "Travel"];
 
 function ProfilePage() {
+  const [pointsData, setPointsData] = useState<UserPoints | null>(null);
+  const [pointsLoaded, setPointsLoaded] = useState(false);
+
+  useEffect(() => {
+    getMyPoints()
+      .then((result) => setPointsData(result as UserPoints | null))
+      .catch(() => setPointsData(null))
+      .finally(() => setPointsLoaded(true));
+  }, []);
+
+  const showPoints = pointsLoaded && pointsData !== null;
+
   return (
     <div className="pb-24">
       {/* Cover */}
@@ -62,6 +76,68 @@ function ProfilePage() {
         <div className="mt-4">
           <button className="btn-secondary w-full">Edit Profile</button>
         </div>
+
+        {/* Community Points */}
+        {showPoints && (
+          <section className="mt-8">
+            <h2 className="mb-3 text-lg font-bold text-neutral-700">Community Points</h2>
+            {pointsData!.points === 0 ? (
+              <div className="card p-6 text-center">
+                <div className="text-3xl">🏅</div>
+                <p className="mt-2 font-medium text-neutral-700">No points yet</p>
+                <p className="mx-auto mt-1 max-w-sm text-sm text-neutral-500">
+                  Join the forums — start threads, answer questions, and get upvoted to earn points and badges.
+                </p>
+                <Link to="/community/forums" className="btn-primary mt-4 inline-block">
+                  Explore Forums
+                </Link>
+              </div>
+            ) : (
+              <div className="card p-5">
+                {/* Total points */}
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="text-3xl font-bold text-brand-primary-700">{pointsData!.points}</div>
+                    <div className="text-xs text-neutral-500">Total points</div>
+                  </div>
+                  <div className="text-3xl">⭐</div>
+                </div>
+
+                {/* Badges */}
+                {pointsData!.badges.length > 0 && (
+                  <div className="mt-4">
+                    <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-neutral-500">Badges</div>
+                    <div className="flex flex-wrap gap-2">
+                      {pointsData!.badges.map((badge) => (
+                        <span
+                          key={badge}
+                          className="inline-flex items-center gap-1 rounded-full bg-brand-gold-100 px-3 py-1 text-xs font-medium text-brand-gold-700"
+                        >
+                          🏅 {badge}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Stats */}
+                <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                  {[
+                    { label: "Threads started", value: pointsData!.stats.threadsCreated },
+                    { label: "Replies posted", value: pointsData!.stats.repliesPosted },
+                    { label: "Upvotes received", value: pointsData!.stats.upvotesReceived },
+                    { label: "Upvotes given", value: pointsData!.stats.upvotesGiven },
+                  ].map((stat) => (
+                    <div key={stat.label} className="rounded-xl bg-neutral-100 p-3 text-center">
+                      <div className="text-lg font-bold text-neutral-700">{stat.value}</div>
+                      <div className="text-xs text-neutral-500">{stat.label}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </section>
+        )}
 
         {/* Interests */}
         <section className="mt-8">
