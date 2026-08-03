@@ -749,6 +749,30 @@ function requireUser(session: AuthSession | null): ForumActionResult | null {
 }
 
 // =============================================================================
+// Payload helpers
+// =============================================================================
+
+/** Coerce a FormData value to string (or undefined). */
+function str(v: FormDataEntryValue | null): string | undefined {
+  return typeof v === "string" && v.length > 0 ? v : undefined;
+}
+/**
+ * Extract string fields from a server-fn payload, tolerant of every shape the
+ * framework can deliver: a raw FormData, `{ data: FormData, context, method }`,
+ * `{ data: { ...fields } }`, or a bare `{ ...fields }` object. (POST args are
+ * sent as FormData because this server build can't parse the seroval JSON
+ * envelope the client's createServerFn serialization produces.)
+ */
+function getStrField(data: unknown, key: string): string | undefined {
+  if (data instanceof FormData) return str(data.get(key));
+  const obj = (data ?? {}) as Record<string, unknown>;
+  const inner = obj.data;
+  if (inner instanceof FormData) return str(inner.get(key));
+  const src = (inner && typeof inner === "object" ? inner : obj) as Record<string, unknown>;
+  return typeof src[key] === "string" ? (src[key] as string) : undefined;
+}
+
+// =============================================================================
 // Server Functions
 // =============================================================================
 
@@ -829,12 +853,10 @@ export const createThread = createServerFn({ method: "POST" }).handler(
     const blocked = requireUser(user);
     if (blocked) return blocked;
 
-    const { title, body, category, tags } = (data ?? {}) as {
-      title?: string;
-      body?: string;
-      category?: string;
-      tags?: string[] | string;
-    };
+    const title = getStrField(data, "title") ?? "";
+    const body = getStrField(data, "body") ?? "";
+    const category = getStrField(data, "category");
+    const tags = getStrField(data, "tags");
 
     if (!title || !title.trim()) {
       return { success: false, error: "Please add a title." };
@@ -898,7 +920,8 @@ export const createReply = createServerFn({ method: "POST" }).handler(
     const blocked = requireUser(user);
     if (blocked) return blocked;
 
-    const { threadId, body } = (data ?? {}) as { threadId?: string; body?: string };
+    const threadId = getStrField(data, "threadId");
+    const body = getStrField(data, "body");
     if (!threadId) return { success: false, error: "Thread is required." };
     if (!body || !body.trim()) {
       return { success: false, error: "Please write a reply." };
@@ -941,7 +964,7 @@ export const upvoteThread = createServerFn({ method: "POST" }).handler(
     const blocked = requireUser(user);
     if (blocked) return blocked;
 
-    const { threadId } = (data ?? {}) as { threadId?: string };
+    const threadId = getStrField(data, "threadId");
     const threads = await readThreads();
     const thread = threads.find((t) => t.id === threadId);
     if (!thread) return { success: false, error: "Thread not found." };
@@ -969,7 +992,7 @@ export const unvoteThread = createServerFn({ method: "POST" }).handler(
     const blocked = requireUser(user);
     if (blocked) return blocked;
 
-    const { threadId } = (data ?? {}) as { threadId?: string };
+    const threadId = getStrField(data, "threadId");
     const threads = await readThreads();
     const thread = threads.find((t) => t.id === threadId);
     if (!thread) return { success: false, error: "Thread not found." };
@@ -991,7 +1014,7 @@ export const upvoteReply = createServerFn({ method: "POST" }).handler(
     const blocked = requireUser(user);
     if (blocked) return blocked;
 
-    const { replyId } = (data ?? {}) as { replyId?: string };
+    const replyId = getStrField(data, "replyId");
     const replies = await readReplies();
     const reply = replies.find((r) => r.id === replyId);
     if (!reply) return { success: false, error: "Reply not found." };
@@ -1019,7 +1042,7 @@ export const unvoteReply = createServerFn({ method: "POST" }).handler(
     const blocked = requireUser(user);
     if (blocked) return blocked;
 
-    const { replyId } = (data ?? {}) as { replyId?: string };
+    const replyId = getStrField(data, "replyId");
     const replies = await readReplies();
     const reply = replies.find((r) => r.id === replyId);
     if (!reply) return { success: false, error: "Reply not found." };
@@ -1041,10 +1064,8 @@ export const markAcceptedReply = createServerFn({ method: "POST" }).handler(
     const blocked = requireUser(user);
     if (blocked) return blocked;
 
-    const { threadId, replyId } = (data ?? {}) as {
-      threadId?: string;
-      replyId?: string;
-    };
+    const threadId = getStrField(data, "threadId");
+    const replyId = getStrField(data, "replyId");
     if (!threadId || !replyId) {
       return { success: false, error: "Thread and reply are required." };
     }

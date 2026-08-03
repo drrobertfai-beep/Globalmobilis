@@ -92,11 +92,11 @@ function PremiumPage() {
     }
 
     const base = `${window.location.origin}`;
-    const res = await createCheckoutSession({
-      planId: plan.id,
-      cancelUrl: `${base}/premium?checkout=cancelled`,
-      successUrl: `${base}/premium?checkout=success`,
-    });
+    const fd = new FormData();
+    fd.set("planId", plan.id);
+    fd.set("cancelUrl", `${base}/premium?checkout=cancelled`);
+    fd.set("successUrl", `${base}/premium?checkout=success`);
+    const res = await createCheckoutSession(fd);
 
     if (res.success && res.url) {
       window.location.href = res.url;

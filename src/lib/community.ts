@@ -348,6 +348,30 @@ function requireUser(session: AuthSession | null): ActionResult | null {
 }
 
 // =============================================================================
+// Payload helpers
+// =============================================================================
+
+/** Coerce a FormData value to string (or undefined). */
+function str(v: FormDataEntryValue | null): string | undefined {
+  return typeof v === "string" && v.length > 0 ? v : undefined;
+}
+/**
+ * Extract string fields from a server-fn payload, tolerant of every shape the
+ * framework can deliver: a raw FormData, `{ data: FormData, context, method }`,
+ * `{ data: { ...fields } }`, or a bare `{ ...fields }` object. (POST args are
+ * sent as FormData because this server build can't parse the seroval JSON
+ * envelope the client's createServerFn serialization produces.)
+ */
+function getStrField(data: unknown, key: string): string | undefined {
+  if (data instanceof FormData) return str(data.get(key));
+  const obj = (data ?? {}) as Record<string, unknown>;
+  const inner = obj.data;
+  if (inner instanceof FormData) return str(inner.get(key));
+  const src = (inner && typeof inner === "object" ? inner : obj) as Record<string, unknown>;
+  return typeof src[key] === "string" ? (src[key] as string) : undefined;
+}
+
+// =============================================================================
 // Server Functions
 // =============================================================================
 
@@ -388,8 +412,13 @@ export const createGroup = createServerFn({ method: "POST" }).handler(
     const blocked = requireUser(user);
     if (blocked) return blocked;
 
-    const { name, description, type, icon, color, city, country } = (data ||
-      {}) as Record<string, string>;
+    const name = getStrField(data, "name") ?? "";
+    const description = getStrField(data, "description") ?? "";
+    const type = getStrField(data, "type") ?? "";
+    const icon = getStrField(data, "icon") ?? "";
+    const color = getStrField(data, "color") ?? "";
+    const city = getStrField(data, "city") ?? "";
+    const country = getStrField(data, "country") ?? "";
 
     if (!name || !name.trim()) {
       return { success: false, error: "Group name is required." };
@@ -429,7 +458,7 @@ export const joinGroup = createServerFn({ method: "POST" }).handler(
     const blocked = requireUser(user);
     if (blocked) return blocked;
 
-    const { groupId } = (data || {}) as { groupId?: string };
+    const groupId = getStrField(data, "groupId");
     if (!groupId) return { success: false, error: "Group is required." };
 
     const groups = readGroups();
@@ -452,7 +481,7 @@ export const leaveGroup = createServerFn({ method: "POST" }).handler(
     const blocked = requireUser(user);
     if (blocked) return blocked;
 
-    const { groupId } = (data || {}) as { groupId?: string };
+    const groupId = getStrField(data, "groupId");
     if (!groupId) return { success: false, error: "Group is required." };
 
     const groups = readGroups();
@@ -472,8 +501,12 @@ export const createEvent = createServerFn({ method: "POST" }).handler(
     const blocked = requireUser(user);
     if (blocked) return blocked;
 
-    const { groupId, title, description, date, time, location } = (data ||
-      {}) as Record<string, string>;
+    const groupId = getStrField(data, "groupId") ?? "";
+    const title = getStrField(data, "title") ?? "";
+    const description = getStrField(data, "description") ?? "";
+    const date = getStrField(data, "date") ?? "";
+    const time = getStrField(data, "time") ?? "";
+    const location = getStrField(data, "location") ?? "";
 
     if (!groupId) return { success: false, error: "Please choose a group." };
     if (!title || !title.trim()) return { success: false, error: "Event title is required." };
@@ -519,7 +552,7 @@ export const rsvpToEvent = createServerFn({ method: "POST" }).handler(
     const blocked = requireUser(user);
     if (blocked) return blocked;
 
-    const { eventId } = (data || {}) as { eventId?: string };
+    const eventId = getStrField(data, "eventId");
     if (!eventId) return { success: false, error: "Event is required." };
 
     const events = readEvents();

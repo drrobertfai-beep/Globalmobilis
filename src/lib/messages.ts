@@ -194,6 +194,30 @@ function toConversationView(conversation: Conversation, userId: string): Convers
 }
 
 // =============================================================================
+// Payload helpers
+// =============================================================================
+
+/** Coerce a FormData value to string (or undefined). */
+function str(v: FormDataEntryValue | null): string | undefined {
+  return typeof v === "string" && v.length > 0 ? v : undefined;
+}
+/**
+ * Extract string fields from a server-fn payload, tolerant of every shape the
+ * framework can deliver: a raw FormData, `{ data: FormData, context, method }`,
+ * `{ data: { ...fields } }`, or a bare `{ ...fields }` object. (POST args are
+ * sent as FormData because this server build can't parse the seroval JSON
+ * envelope the client's createServerFn serialization produces.)
+ */
+function getStrField(data: unknown, key: string): string | undefined {
+  if (data instanceof FormData) return str(data.get(key));
+  const obj = (data ?? {}) as Record<string, unknown>;
+  const inner = obj.data;
+  if (inner instanceof FormData) return str(inner.get(key));
+  const src = (inner && typeof inner === "object" ? inner : obj) as Record<string, unknown>;
+  return typeof src[key] === "string" ? (src[key] as string) : undefined;
+}
+
+// =============================================================================
 // Server Functions
 // =============================================================================
 
@@ -257,10 +281,8 @@ export const sendMessage = createServerFn({ method: "POST" }).handler(
     const user = await getCurrentUser();
     if (!user) return { success: false, error: "You must be signed in to send messages." };
 
-    const { conversationId, text } = (data || {}) as {
-      conversationId?: string;
-      text?: string;
-    };
+    const conversationId = getStrField(data, "conversationId");
+    const text = getStrField(data, "text");
 
     if (!conversationId) return { success: false, error: "Conversation is required." };
     if (!text || !text.trim()) return { success: false, error: "Message cannot be empty." };

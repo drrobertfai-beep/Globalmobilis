@@ -17,7 +17,9 @@ function ForgotPasswordPage() {
     setStatus("loading");
     setMessage("");
     try {
-      const result = await requestPasswordReset({ email });
+      const fd = new FormData();
+      fd.set("email", email);
+      const result = await requestPasswordReset(fd);
       if (result.success) {
         setStatus("success");
         setMessage(result.message || "Check your email for a reset link.");

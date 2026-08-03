@@ -116,7 +116,9 @@ function ThreadDetailPage() {
     setBusy((b) => ({ ...b, tv: true }));
     try {
       const fn = thread.isUpvoted ? unvoteThread : upvoteThread;
-      const result = (await fn({ threadId: thread.id })) as unknown as ForumActionResult;
+      const fd = new FormData();
+      fd.set("threadId", thread.id);
+      const result = (await fn(fd)) as unknown as ForumActionResult;
       if (result.success && result.thread && data) {
         setData({ ...data, thread: result.thread });
       }
@@ -130,7 +132,9 @@ function ThreadDetailPage() {
     setBusy((b) => ({ ...b, [`rv_${reply.id}`]: true }));
     try {
       const fn = reply.isUpvoted ? unvoteReply : upvoteReply;
-      const result = (await fn({ replyId: reply.id })) as unknown as ForumActionResult;
+      const fd = new FormData();
+      fd.set("replyId", reply.id);
+      const result = (await fn(fd)) as unknown as ForumActionResult;
       if (result.success && result.reply && data) {
         setData({
           ...data,
@@ -148,10 +152,10 @@ function ThreadDetailPage() {
     if (!requireLogin()) return;
     setBusy((b) => ({ ...b, [`ac_${reply.id}`]: true }));
     try {
-      const result = (await markAcceptedReply({
-        threadId: thread?.id ?? "",
-        replyId: reply.id,
-      })) as unknown as ForumActionResult;
+      const fd = new FormData();
+      fd.set("threadId", thread?.id ?? "");
+      fd.set("replyId", reply.id);
+      const result = (await markAcceptedReply(fd)) as unknown as ForumActionResult;
       if (result.success && result.reply && data) {
         const updated = result.reply as ReplyView;
         setData({
@@ -180,10 +184,10 @@ function ThreadDetailPage() {
     setPosting(true);
     setError("");
     try {
-      const result = (await createReply({
-        threadId: thread.id,
-        body: replyText,
-      })) as unknown as ForumActionResult;
+      const fd = new FormData();
+      fd.set("threadId", thread.id);
+      fd.set("body", replyText);
+      const result = (await createReply(fd)) as unknown as ForumActionResult;
       if (result.success) {
         setReplyText("");
         await load();

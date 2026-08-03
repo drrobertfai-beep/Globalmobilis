@@ -37,7 +37,12 @@ function SignupPage() {
     setLoading(true);
 
     try {
-      const result = await signUp({ email, password, name, referralCode: refCode || undefined }) as any;
+      const fd = new FormData();
+      fd.set("email", email);
+      fd.set("password", password);
+      fd.set("name", name);
+      if (refCode) fd.set("referralCode", refCode);
+      const result = await signUp(fd) as any;
       if (result.success) {
         setSuccess(true);
         document.cookie = result.cookie;

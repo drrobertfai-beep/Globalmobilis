@@ -16,9 +16,30 @@ interface WaitlistEntry {
  * Server function to submit an email to the waitlist.
  * Uses Neon database when DATABASE_URL is available, falls back to file storage.
  */
+/** Coerce a FormData value to string (or undefined). */
+function str(v: FormDataEntryValue | null): string | undefined {
+  return typeof v === "string" && v.length > 0 ? v : undefined;
+}
+/**
+ * Extract string fields from a server-fn payload, tolerant of every shape the
+ * framework can deliver: a raw FormData, `{ data: FormData, context, method }`,
+ * `{ data: { ...fields } }`, or a bare `{ ...fields }` object. (POST args are
+ * sent as FormData because this server build can't parse the seroval JSON
+ * envelope the client's createServerFn serialization produces.)
+ */
+function getStrField(data: unknown, key: string): string | undefined {
+  if (data instanceof FormData) return str(data.get(key));
+  const obj = (data ?? {}) as Record<string, unknown>;
+  const inner = obj.data;
+  if (inner instanceof FormData) return str(inner.get(key));
+  const src = (inner && typeof inner === "object" ? inner : obj) as Record<string, unknown>;
+  return typeof src[key] === "string" ? (src[key] as string) : undefined;
+}
+
 export const submitToWaitlist = createServerFn({ method: "POST" }).handler(
   async (data: unknown) => {
-    const { email, name } = data as { email: string; name?: string };
+    const email = getStrField(data, "email") ?? "";
+    const name = getStrField(data, "name");
 
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return { success: false, error: "Valid email is required" };

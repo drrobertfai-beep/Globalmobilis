@@ -12,7 +12,10 @@ export function EmailSignup() {
     setStatus("loading");
 
     try {
-      const result = await submitToWaitlist({ email, name });
+      const fd = new FormData();
+      fd.set("email", email);
+      if (name) fd.set("name", name);
+      const result = await submitToWaitlist(fd);
 
       if (result.success) {
         setStatus("success");

@@ -31,7 +31,10 @@ function ResetPasswordPage() {
     setStatus("loading");
     setMessage("");
     try {
-      const result = await resetPassword({ token, newPassword });
+      const fd = new FormData();
+      fd.set("token", token);
+      fd.set("newPassword", newPassword);
+      const result = await resetPassword(fd);
       if (result.success) {
         setStatus("success");
         setMessage(result.message || "Password has been reset.");
