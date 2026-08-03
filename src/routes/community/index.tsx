@@ -116,11 +116,15 @@ function CreateGroupModal({
     setSubmitting(true);
     setError("");
     try {
-      const result = (await createGroup({
-        ...form,
-        icon: GROUP_ICONS[form.type] || "🌍",
-        color: GROUP_TYPE_COLORS[form.type] || "bg-brand-secondary-500",
-      })) as any;
+      const fd = new FormData();
+      fd.set("name", form.name);
+      fd.set("description", form.description);
+      fd.set("type", form.type);
+      fd.set("icon", GROUP_ICONS[form.type] || "🌍");
+      fd.set("color", GROUP_TYPE_COLORS[form.type] || "bg-brand-secondary-500");
+      fd.set("city", form.city);
+      fd.set("country", form.country);
+      const result = (await createGroup(fd)) as any;
       if (result.success) {
         onCreated(result.group as GroupView);
       } else {
@@ -236,7 +240,14 @@ function CreateEventModal({
     setSubmitting(true);
     setError("");
     try {
-      const result = (await createEvent(form)) as any;
+      const fd = new FormData();
+      fd.set("groupId", form.groupId);
+      fd.set("title", form.title);
+      fd.set("description", form.description);
+      fd.set("date", form.date);
+      fd.set("time", form.time);
+      fd.set("location", form.location);
+      const result = (await createEvent(fd)) as any;
       if (result.success) {
         onCreated(result.event as EventView);
       } else {
@@ -398,7 +409,9 @@ function CommunityPage() {
     if (!requireLogin()) return;
     setBusy((b) => ({ ...b, [`j_${group.id}`]: true }));
     try {
-      const result = (await joinGroup({ groupId: group.id })) as any;
+      const fd = new FormData();
+      fd.set("groupId", group.id);
+      const result = (await joinGroup(fd)) as any;
       if (result.success && result.group) {
         setData((prev) =>
           prev
@@ -418,7 +431,9 @@ function CommunityPage() {
     if (!requireLogin()) return;
     setBusy((b) => ({ ...b, [`j_${group.id}`]: true }));
     try {
-      const result = (await leaveGroup({ groupId: group.id })) as any;
+      const fd = new FormData();
+      fd.set("groupId", group.id);
+      const result = (await leaveGroup(fd)) as any;
       if (result.success && result.group) {
         setData((prev) =>
           prev
@@ -438,7 +453,9 @@ function CommunityPage() {
     if (!requireLogin()) return;
     setBusy((b) => ({ ...b, [`r_${event.id}`]: true }));
     try {
-      const result = (await rsvpToEvent({ eventId: event.id })) as any;
+      const fd = new FormData();
+      fd.set("eventId", event.id);
+      const result = (await rsvpToEvent(fd)) as any;
       if (result.success && result.event) {
         setData((prev) =>
           prev

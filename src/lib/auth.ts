@@ -149,17 +149,39 @@ export function parseCookies(cookieHeader: string | null): Record<string, string
 }
 
 // =============================================================================
+// Payload helpers
+// =============================================================================
+
+/** Coerce a FormData value to string (or undefined). */
+function str(v: FormDataEntryValue | null): string | undefined {
+  return typeof v === "string" && v.length > 0 ? v : undefined;
+}
+/**
+ * Extract string fields from a server-fn payload, tolerant of every shape the
+ * framework can deliver: a raw FormData, `{ data: FormData, context, method }`,
+ * `{ data: { ...fields } }`, or a bare `{ ...fields }` object. (POST args are
+ * sent as FormData because this server build can't parse the seroval JSON
+ * envelope the client's createServerFn serialization produces.)
+ */
+function getStrField(data: unknown, key: string): string | undefined {
+  if (data instanceof FormData) return str(data.get(key));
+  const obj = (data ?? {}) as Record<string, unknown>;
+  const inner = obj.data;
+  if (inner instanceof FormData) return str(inner.get(key));
+  const src = (inner && typeof inner === "object" ? inner : obj) as Record<string, unknown>;
+  return typeof src[key] === "string" ? (src[key] as string) : undefined;
+}
+
+// =============================================================================
 // Sign Up
 // =============================================================================
 
 export const signUp = createServerFn({ method: "POST" }).handler(
   async (data: unknown) => {
-    const { email, password, name, referralCode } = data as {
-      email: string;
-      password: string;
-      name: string;
-      referralCode?: string;
-    };
+    const email = getStrField(data, "email") ?? "";
+    const password = getStrField(data, "password") ?? "";
+    const name = getStrField(data, "name") ?? "";
+    const referralCode = getStrField(data, "referralCode");
 
     if (!email || !password || !name) {
       return { success: false, error: "All fields are required" };
@@ -252,7 +274,8 @@ export const signUp = createServerFn({ method: "POST" }).handler(
 
 export const logIn = createServerFn({ method: "POST" }).handler(
   async (data: unknown) => {
-    const { email, password } = data as { email: string; password: string };
+    const email = getStrField(data, "email") ?? "";
+    const password = getStrField(data, "password") ?? "";
 
     if (!email || !password) {
       return { success: false, error: "Email and password are required" };
@@ -335,7 +358,7 @@ function generateResetToken(): string {
 
 export const requestPasswordReset = createServerFn({ method: "POST" }).handler(
   async (data: unknown) => {
-    const { email } = data as { email: string };
+    const email = getStrField(data, "email") ?? "";
 
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return { success: false, error: "Please enter a valid email address" };
@@ -393,7 +416,8 @@ export const requestPasswordReset = createServerFn({ method: "POST" }).handler(
 
 export const resetPassword = createServerFn({ method: "POST" }).handler(
   async (data: unknown) => {
-    const { token, newPassword } = data as { token: string; newPassword: string };
+    const token = getStrField(data, "token") ?? "";
+    const newPassword = getStrField(data, "newPassword") ?? "";
 
     if (!token || !newPassword) {
       return { success: false, error: "Token and new password are required" };

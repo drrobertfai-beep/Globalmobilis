@@ -84,12 +84,12 @@ function NewThreadModal({
     setSubmitting(true);
     setError("");
     try {
-      const result = (await createThread({
-        title: form.title,
-        body: form.body,
-        category: form.category || "General",
-        tags: form.tags,
-      })) as unknown as ForumActionResult;
+      const fd = new FormData();
+      fd.set("title", form.title);
+      fd.set("body", form.body);
+      fd.set("category", form.category || "General");
+      fd.set("tags", form.tags);
+      const result = (await createThread(fd)) as unknown as ForumActionResult;
       if (result.success && result.thread) {
         onCreated(result.thread);
       } else {
@@ -256,7 +256,9 @@ function ForumsPage() {
     setBusy((b) => ({ ...b, [`u_${thread.id}`]: true }));
     try {
       const fn = thread.isUpvoted ? unvoteThread : upvoteThread;
-      const result = (await fn({ threadId: thread.id })) as unknown as ForumActionResult;
+      const fd = new FormData();
+      fd.set("threadId", thread.id);
+      const result = (await fn(fd)) as unknown as ForumActionResult;
       if (result.success && result.thread) {
         setData((prev) =>
           prev

@@ -56,7 +56,10 @@ function MessageThreadPage() {
     if (!input.trim() || sending) return;
     setSending(true);
     try {
-      const result = (await sendMessage({ conversationId: id, text: input })) as any;
+      const fd = new FormData();
+      fd.set("conversationId", id);
+      fd.set("text", input);
+      const result = (await sendMessage(fd)) as any;
       if (result.success && result.message) {
         setThread((prev) =>
           prev
