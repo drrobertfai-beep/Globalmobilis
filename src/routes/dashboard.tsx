@@ -66,6 +66,19 @@ function DashboardPage() {
           ))}
         </div>
 
+        {/* Survey CTA */}
+        <Link
+          to="/survey"
+          className="flex items-center gap-4 rounded-2xl border-2 border-[#F4B860]/40 bg-gradient-to-r from-[#FFF8ED] to-[#FFF3DC] p-5 transition-all hover:shadow-md"
+        >
+          <span className="text-3xl">📋</span>
+          <div className="flex-1">
+            <h3 className="font-bold text-gray-900">Help shape Global Mobilis</h3>
+            <p className="text-sm text-gray-600">Take our 2-minute survey — tell us what you need most and get early access to premium features.</p>
+          </div>
+          <span className="rounded-full bg-[#F4B860] px-4 py-1.5 text-sm font-semibold text-[#0A1F3F]">Start →</span>
+        </Link>
+
         {/* Featured destination hero */}
         {!loading && destinations.length > 0 && (
           <Link
