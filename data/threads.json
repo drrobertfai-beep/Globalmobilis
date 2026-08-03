@@ -1,0 +1,170 @@
+[
+  {
+    "id": "t_toronto_uk_guide",
+    "title": "Moving to Toronto from the UK — neighbourhood tips?",
+    "body": "Relocating with my family next month (job in the financial district). We've shortlisted Liberty Village, The Beaches and Leslieville. Priorities: decent commute downtown, good public schools, and a neighbourhood that doesn't feel like a ghost town at weekends. Anyone made a similar move and have strong opinions?",
+    "category": "Toronto",
+    "tags": [
+      "housing",
+      "families",
+      "moving"
+    ],
+    "authorId": "seed_sophie",
+    "authorName": "Sophie Turner",
+    "upvotes": 18,
+    "upvoterIds": [],
+    "replyCount": 3,
+    "pinned": false,
+    "createdAt": "2026-07-28T09:14:00.000Z",
+    "updatedAt": "2026-07-28T09:14:00.000Z"
+  },
+  {
+    "id": "t_berlin_anmeldung",
+    "title": "Berlin Anmeldung as a freelancer — step-by-step?",
+    "body": "I keep reading conflicting advice about registering my address (Anmeldung) before or after getting a freelance visa. I have a Wohnungsgeberbestätigung from my landlord. What's the actual order of operations, and do I need an appointment at the Bürgeramt weeks in advance?",
+    "category": "Berlin",
+    "tags": [
+      "visa",
+      "freelance",
+      "paperwork"
+    ],
+    "authorId": "seed_marco",
+    "authorName": "Marco Silva",
+    "upvotes": 24,
+    "upvoterIds": [],
+    "replyCount": 4,
+    "pinned": false,
+    "createdAt": "2026-07-25T16:40:00.000Z",
+    "updatedAt": "2026-07-25T16:40:00.000Z"
+  },
+  {
+    "id": "t_dubai_freezone",
+    "title": "Dubai: free zone vs mainland for an online consultancy?",
+    "body": "Planning to move my consulting practice to Dubai. I keep hearing mainland is 'better for credibility' but free zones are cheaper and 100% ownership. For a solo consultant serving overseas clients, is a free zone license (e.g. DMCC) enough, or should I bite the bullet and go mainland?",
+    "category": "Dubai",
+    "tags": [
+      "business",
+      "licensing"
+    ],
+    "authorId": "seed_amira",
+    "authorName": "Amira Hassan",
+    "upvotes": 31,
+    "upvoterIds": [],
+    "replyCount": 4,
+    "pinned": false,
+    "createdAt": "2026-07-22T08:05:00.000Z",
+    "updatedAt": "2026-07-22T08:05:00.000Z"
+  },
+  {
+    "id": "t_lisbon_dn_visa",
+    "title": "Digital Nomad Visa: the documents that actually got approved",
+    "body": "My Portugal D8 visa was approved last week after 11 weeks. Sharing what made the difference: 1) income proof in the exact format the consulate wanted (3 months of payslips + bank statements, not just a contract), 2) a rental lease longer than the standard 6 months, 3) a cover letter in Portuguese. Happy to answer questions.",
+    "category": "Lisbon",
+    "tags": [
+      "visa",
+      "remote work",
+      "success story"
+    ],
+    "authorId": "seed_priya",
+    "authorName": "Priya Sharma",
+    "upvotes": 47,
+    "upvoterIds": [],
+    "replyCount": 5,
+    "pinned": true,
+    "createdAt": "2026-07-18T12:30:00.000Z",
+    "updatedAt": "2026-07-18T12:30:00.000Z"
+  },
+  {
+    "id": "t_london_salary",
+    "title": "London tech offer — what salary is actually realistic in 2026?",
+    "body": "Senior backend engineer offer: £95k base, 8% bonus, 25 days holiday, remote 2 days/week. I'm moving from Amsterdam where I earn €85k. The recruiter says £95k is 'top of band'. Is that true for a senior at a scale-up, or am I being lowballed?",
+    "category": "London",
+    "tags": [
+      "jobs",
+      "salary",
+      "negotiation"
+    ],
+    "authorId": "seed_omar",
+    "authorName": "Omar Al-Farsi",
+    "upvotes": 29,
+    "upvoterIds": [],
+    "replyCount": 4,
+    "pinned": false,
+    "createdAt": "2026-07-15T10:20:00.000Z",
+    "updatedAt": "2026-07-15T10:20:00.000Z"
+  },
+  {
+    "id": "t_sydney_schools",
+    "title": "Sydney school zones: how far ahead should we plan?",
+    "body": "Two kids (8 and 11). We're renting in North Sydney but house-hunting in the Hills district for the school catchments. How competitive is enrolment really — do we need to be inside the zone before the school year starts, or can we apply from outside?",
+    "category": "Sydney",
+    "tags": [
+      "families",
+      "schools",
+      "housing"
+    ],
+    "authorId": "seed_david",
+    "authorName": "David Kim",
+    "upvotes": 12,
+    "upvoterIds": [],
+    "replyCount": 3,
+    "pinned": false,
+    "createdAt": "2026-07-10T01:45:00.000Z",
+    "updatedAt": "2026-07-10T01:45:00.000Z"
+  },
+  {
+    "id": "t_general_transfer_fees",
+    "title": "Best way to transfer money internationally without getting rinsed?",
+    "body": "Between moving costs, rent deposits and family support, I'll be moving six figures between currencies this year. Wise vs Revolut vs a proper FX broker — what do people actually use for large transfers as an expat?",
+    "category": "General",
+    "tags": [
+      "money",
+      "banking"
+    ],
+    "authorId": "seed_emma",
+    "authorName": "Emma Johansson",
+    "upvotes": 22,
+    "upvoterIds": [],
+    "replyCount": 3,
+    "pinned": false,
+    "createdAt": "2026-07-05T18:00:00.000Z",
+    "updatedAt": "2026-07-05T18:00:00.000Z"
+  },
+  {
+    "id": "t_general_healthcare",
+    "title": "Which countries make expat health insurance unnecessary?",
+    "body": "Trying to compare healthcare as part of destination research. I know the UK has the NHS and Portugal has SNS, but how do they actually work for newcomers? Where have you lived where you genuinely didn't need private insurance?",
+    "category": "General",
+    "tags": [
+      "healthcare",
+      "insurance",
+      "comparison"
+    ],
+    "authorId": "seed_lukas",
+    "authorName": "Lukas Weber",
+    "upvotes": 16,
+    "upvoterIds": [],
+    "replyCount": 3,
+    "pinned": false,
+    "createdAt": "2026-06-29T14:10:00.000Z",
+    "updatedAt": "2026-06-29T14:10:00.000Z"
+  },
+  {
+    "id": "t_general_first30",
+    "title": "First 30 days as an expat: what do you wish you'd done differently?",
+    "body": "Landing in a new country next month and want to front-load the admin so I can actually enjoy the first month. Bank account, SIM, tax number, health registration, flat viewing — what order did things actually need to happen for you, and what did you regret putting off?",
+    "category": "General",
+    "tags": [
+      "newcomer",
+      "checklist"
+    ],
+    "authorId": "seed_sophie",
+    "authorName": "Sophie Turner",
+    "upvotes": 35,
+    "upvoterIds": [],
+    "replyCount": 4,
+    "pinned": false,
+    "createdAt": "2026-06-22T07:55:00.000Z",
+    "updatedAt": "2026-06-22T07:55:00.000Z"
+  }
+]

@@ -11,6 +11,7 @@ import {
   type EventView,
   type GroupView,
 } from "~/lib/community";
+import { listThreads, type ThreadView } from "~/lib/forums";
 
 export const Route = createFileRoute("/community/")({
   component: CommunityPage,
@@ -343,11 +344,16 @@ function CommunityPage() {
   const [showCreateGroup, setShowCreateGroup] = useState(false);
   const [showCreateEvent, setShowCreateEvent] = useState(false);
   const [busy, setBusy] = useState<Record<string, boolean>>({});
+  const [threads, setThreads] = useState<ThreadView[]>([]);
 
   const load = async () => {
     setLoading(true);
-    const result = (await getCommunityData()) as unknown as CommunityData;
-    setData(result);
+    const [commResult, threadsResult] = await Promise.all([
+      getCommunityData(),
+      listThreads({ category: null }),
+    ]);
+    setData(commResult as unknown as CommunityData);
+    setThreads(threadsResult as unknown as ThreadView[]);
     setLoading(false);
   };
 
@@ -374,6 +380,12 @@ function CommunityPage() {
     }
     return data.groups;
   }, [data, activeChip]);
+
+  const recentThreads = useMemo(() => {
+    return [...threads]
+      .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+      .slice(0, 5);
+  }, [threads]);
 
   const requireLogin = (): boolean => {
     if (currentUser) return true;
@@ -470,7 +482,7 @@ function CommunityPage() {
             </button>
           </div>
           <div className="mb-4 flex gap-2 overflow-x-auto hide-scrollbar">
-            {["All", "Your Groups", "Nearby", "Following", "Events"].map((chip) => (
+            {["All", "Your Groups", "Forums", "Events"].map((chip) => (
               <button
                 key={chip}
                 onClick={() => setActiveChip(chip)}
@@ -501,7 +513,7 @@ function CommunityPage() {
       ) : (
         <div className="mx-auto max-w-6xl space-y-8 px-4 py-6 sm:px-6">
           {/* Your Groups */}
-          {activeChip !== "Events" && (
+          {(activeChip === "All" || activeChip === "Your Groups") && (
             <section>
               <h2 className="mb-4 text-lg font-bold text-neutral-700">Your groups</h2>
               {yourGroups.length === 0 ? (
@@ -545,8 +557,9 @@ function CommunityPage() {
           )}
 
           {/* Discover Groups */}
-          <section>
-            <h2 className="mb-4 text-lg font-bold text-neutral-700">Discover groups near you</h2>
+          {(activeChip === "All" || activeChip === "Your Groups") && (
+            <section>
+              <h2 className="mb-4 text-lg font-bold text-neutral-700">Discover groups near you</h2>
             <div className="grid gap-3 sm:grid-cols-2">
               {visibleGroups.map((group) => (
                 <div key={group.id} className="card flex items-center gap-3 p-4">
@@ -595,10 +608,71 @@ function CommunityPage() {
                 <p className="text-sm text-neutral-400">No groups match this filter yet.</p>
               )}
             </div>
-          </section>
+            </section>
+          )}
+
+          {/* Forums preview */}
+          {(activeChip === "All" || activeChip === "Forums") && (
+            <section>
+              <div className="mb-4 flex items-center justify-between">
+                <h2 className="text-lg font-bold text-neutral-700">Latest forum threads</h2>
+                <Link
+                  to="/community/forums"
+                  className="text-xs font-semibold text-brand-secondary-500 hover:text-brand-secondary-700"
+                >
+                  View all forums →
+                </Link>
+              </div>
+              {recentThreads.length === 0 ? (
+                <div className="card flex flex-col items-center gap-2 p-6 text-center">
+                  <span className="text-2xl">💬</span>
+                  <p className="text-sm text-neutral-500">
+                    No threads yet — start the conversation!
+                  </p>
+                  <Link
+                    to="/community/forums"
+                    className="mt-1 rounded-full bg-brand-primary-700 px-4 py-1.5 text-xs font-semibold text-white hover:bg-brand-primary-500"
+                  >
+                    Browse forums
+                  </Link>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {recentThreads.map((thread) => (
+                    <Link
+                      key={thread.id}
+                      to="/community/forums/$threadId"
+                      params={{ threadId: thread.id }}
+                      className="card flex items-center gap-3 p-3 transition-colors hover:border-brand-secondary-300"
+                    >
+                      <div className="flex shrink-0 flex-col items-center gap-0.5 rounded-xl bg-neutral-50 px-2.5 py-1.5">
+                        <span className="text-sm font-bold text-brand-primary-700">
+                          {thread.upvotes}
+                        </span>
+                        <span className="text-[9px] font-medium text-neutral-400">votes</span>
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-sm font-semibold text-neutral-700">
+                          {thread.title}
+                        </p>
+                        <p className="truncate text-[11px] text-neutral-400">
+                          <span className="font-medium text-neutral-500">{thread.authorName}</span>
+                          {" · "}
+                          {thread.category}
+                          {" · "}
+                          💬 {thread.replyCount}
+                        </p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </section>
+          )}
 
           {/* Upcoming Events */}
-          <section>
+          {(activeChip === "All" || activeChip === "Events") && (
+            <section>
             <div className="mb-4 flex items-center justify-between">
               <h2 className="text-lg font-bold text-neutral-700">Upcoming events</h2>
               {adminGroups.length > 0 && (
@@ -649,7 +723,8 @@ function CommunityPage() {
                 <p className="text-sm text-neutral-400">No upcoming events yet — create one!</p>
               )}
             </div>
-          </section>
+            </section>
+          )}
         </div>
       )}
 
