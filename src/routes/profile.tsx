@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 
+import { BottomNav } from "~/components/BottomNav";
 export const Route = createFileRoute("/profile")({
   component: ProfilePage,
 });
@@ -107,28 +108,7 @@ function ProfilePage() {
       </div>
 
       {/* Bottom tab bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-neutral-200 bg-white">
-        <div className="mx-auto flex max-w-lg items-center justify-around py-2">
-          {[
-            { icon: "🏠", label: "Home", href: "/dashboard", active: false },
-            { icon: "🔍", label: "Explore", href: "/destinations", active: false },
-            { icon: "👥", label: "Connect", href: "/community", active: false },
-            { icon: "💬", label: "Messages", href: "/messages", active: false },
-            { icon: "👤", label: "Profile", href: "/profile", active: true },
-          ].map((tab) => (
-            <Link
-              key={tab.label}
-              to={tab.href}
-              className={`flex flex-col items-center gap-0.5 px-3 py-1 ${
-                tab.active ? "text-brand-secondary-500" : "text-neutral-500"
-              }`}
-            >
-              <span className="text-lg">{tab.icon}</span>
-              <span className="text-[10px] font-medium">{tab.label}</span>
-            </Link>
-          ))}
-        </div>
-      </div>
+      <BottomNav currentTab="profile" />
     </div>
   );
 }

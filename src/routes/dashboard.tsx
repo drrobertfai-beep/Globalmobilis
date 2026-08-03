@@ -2,6 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { getFeaturedDestinations, searchDestinations } from "~/lib/destinations";
 import { LogoIcon } from "~/components/Logo";
+import { BottomNav } from "~/components/BottomNav";
+import { getMyTimeline, type TimelineDetail } from "~/lib/timeline";
 import type { Destination } from "~/db.types";
 
 export const Route = createFileRoute("/dashboard")({
@@ -12,6 +14,7 @@ function DashboardPage() {
   const [destinations, setDestinations] = useState<Destination[]>([]);
   const [loading, setLoading] = useState(true);
   const [referral, setReferral] = useState<any>(null);
+  const [timeline, setTimeline] = useState<TimelineDetail | null>(null);
 
   useEffect(() => {
     getFeaturedDestinations().then((data) => {
@@ -25,6 +28,11 @@ function DashboardPage() {
       .then((data) => {
         if (data.code) setReferral(data);
       })
+      .catch(() => {});
+
+    // Fetch relocation timeline (if any)
+    getMyTimeline()
+      .then((tl) => setTimeline(tl as unknown as TimelineDetail | null))
       .catch(() => {});
   }, []);
 
@@ -134,6 +142,81 @@ function DashboardPage() {
           </div>
         )}
 
+        {/* Relocation timeline widget */}
+        {timeline ? (
+          <Link
+            to="/timeline"
+            className="block rounded-2xl border border-gray-200 bg-white p-5 transition-all hover:shadow-md"
+          >
+            <div className="mb-3 flex items-center justify-between">
+              <h3 className="font-bold text-gray-900">
+                📋 Your Relocation Timeline
+              </h3>
+              <span className="rounded-full bg-brand-primary-50 px-3 py-0.5 text-xs font-semibold text-brand-primary-700">
+                {timeline.destinationFlag} {timeline.destination}
+              </span>
+            </div>
+            <p className="mb-3 text-sm text-gray-600">
+              {(() => {
+                const diff = Math.round(
+                  (new Date(`${timeline.moveDate}T00:00:00Z`).getTime() -
+                    Date.now()) /
+                    86_400_000,
+                );
+                return diff > 0
+                  ? `${diff} day${diff !== 1 ? "s" : ""} until your move`
+                  : diff === 0
+                    ? "Moving today!"
+                    : `Moved ${-diff} day${-diff !== 1 ? "s" : ""} ago`;
+              })()}
+            </p>
+            <div className="mb-3 h-2 overflow-hidden rounded-full bg-gray-200">
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-[#0FA3A3] to-[#F4B860] transition-all"
+                style={{ width: `${timeline.progress.percentage}%` }}
+              />
+            </div>
+            <p className="mb-2 text-xs font-semibold text-gray-500">
+              Up next
+            </p>
+            <div className="space-y-1.5">
+              {timeline.tasks
+                .filter((t) => !t.completed)
+                .slice(0, 3)
+                .map((t) => (
+                  <div key={t.id} className="flex items-center gap-2 text-xs text-gray-600">
+                    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-brand-secondary-500" />
+                    <span className="truncate">{t.title}</span>
+                  </div>
+                ))}
+              {timeline.progress.completed === timeline.progress.total && (
+                <p className="text-xs text-green-600">
+                  🎉 All {timeline.progress.total} tasks complete — you're ready!
+                </p>
+              )}
+            </div>
+            <span className="mt-3 inline-block text-sm font-medium text-brand-primary-500 hover:text-brand-primary-700">
+              View full timeline →
+            </span>
+          </Link>
+        ) : (
+          <Link
+            to="/timeline"
+            className="flex items-center gap-4 rounded-2xl border-2 border-brand-secondary-500/30 bg-gradient-to-r from-[#F0FBFA] to-[#E6F7F5] p-5 transition-all hover:shadow-md"
+          >
+            <span className="text-3xl">📋</span>
+            <div className="flex-1">
+              <h3 className="font-bold text-gray-900">Plan your move</h3>
+              <p className="text-sm text-gray-600">
+                Get a personalized relocation checklist for your destination.
+              </p>
+            </div>
+            <span className="rounded-full bg-brand-secondary-500 px-4 py-1.5 text-sm font-semibold text-white">
+              Plan your move →
+            </span>
+          </Link>
+        )}
+
         {/* Featured destination hero */}
         {!loading && destinations.length > 0 && (
           <Link
@@ -233,28 +316,7 @@ function DashboardPage() {
       </div>
 
       {/* Bottom tab bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-neutral-200 bg-white">
-        <div className="mx-auto flex max-w-lg items-center justify-around py-2">
-          {[
-            { icon: "🏠", label: "Home", href: "/dashboard", active: true },
-            { icon: "🔍", label: "Explore", href: "/destinations", active: false },
-            { icon: "👥", label: "Connect", href: "/community", active: false },
-            { icon: "💬", label: "Messages", href: "/messages", active: false },
-            { icon: "👤", label: "Profile", href: "/profile", active: false },
-          ].map((tab) => (
-            <Link
-              key={tab.label}
-              to={tab.href}
-              className={`flex flex-col items-center gap-0.5 px-3 py-1 ${
-                tab.active ? "text-brand-secondary-500" : "text-neutral-500"
-              }`}
-            >
-              <span className="text-lg">{tab.icon}</span>
-              <span className="text-[10px] font-medium">{tab.label}</span>
-            </Link>
-          ))}
-        </div>
-      </div>
+      <BottomNav currentTab="home" />
     </div>
   );
 }
