@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 
 import { BottomNav } from "~/components/BottomNav";
 import { getMyPoints, type UserPoints } from "~/lib/points";
+import { getMyRedemptions, REWARDS, type Reward, type UserRedemption } from "~/lib/redemption";
 export const Route = createFileRoute("/profile")({
   component: ProfilePage,
 });
@@ -18,13 +19,18 @@ const interests = ["Remote Work", "Photography", "Hiking", "Languages", "Cuisine
 function ProfilePage() {
   const [pointsData, setPointsData] = useState<UserPoints | null>(null);
   const [pointsLoaded, setPointsLoaded] = useState(false);
+  const [redemptions, setRedemptions] = useState<UserRedemption | null>(null);
 
   useEffect(() => {
     getMyPoints()
       .then((result) => setPointsData(result as UserPoints | null))
       .catch(() => setPointsData(null))
       .finally(() => setPointsLoaded(true));
+    getMyRedemptions().then((r) => setRedemptions(r as UserRedemption | null));
   }, []);
+  const redeemedRewards: Reward[] = (redemptions?.redeemed ?? [])
+    .map((r) => REWARDS.find((x) => x.id === r.rewardId))
+    .filter((x): x is Reward => !!x);
 
   const showPoints = pointsLoaded && pointsData !== null;
 
@@ -100,7 +106,12 @@ function ProfilePage() {
                     <div className="text-3xl font-bold text-brand-primary-700">{pointsData!.points}</div>
                     <div className="text-xs text-neutral-500">Total points</div>
                   </div>
-                  <div className="text-3xl">⭐</div>
+                  <Link
+                    to="/rewards"
+                    className="text-sm font-semibold text-brand-gold-700 hover:text-brand-gold-500 hover:underline"
+                  >
+                    Redeem rewards →
+                  </Link>
                 </div>
 
                 {/* Badges */}
@@ -114,6 +125,22 @@ function ProfilePage() {
                           className="inline-flex items-center gap-1 rounded-full bg-brand-gold-100 px-3 py-1 text-xs font-medium text-brand-gold-700"
                         >
                           🏅 {badge}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {/* Active rewards (redeemed) */}
+                {redeemedRewards.length > 0 && (
+                  <div className="mt-4">
+                    <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-neutral-500">Active rewards</div>
+                    <div className="flex flex-wrap gap-2">
+                      {redeemedRewards.map((reward) => (
+                        <span
+                          key={reward.id}
+                          className="inline-flex items-center gap-1 rounded-full bg-brand-gold-100 px-3 py-1 text-xs font-medium text-brand-gold-700"
+                        >
+                          {reward.icon} {reward.name}
                         </span>
                       ))}
                     </div>

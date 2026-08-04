@@ -187,6 +187,20 @@ export async function recordUpvoteGiven(userId: string): Promise<UserPoints> {
   entry.stats.upvotesGiven += 1;
   return persist(entry);
 }
+/**
+ * Spend points (e.g. redeeming a reward). Deducts `amount` from the user's
+ * balance — never below 0 — and returns the updated record. Badges are
+ * recomputed, so a user can drop below a badge threshold after spending.
+ */
+export async function spendPoints(
+  userId: string,
+  amount: number,
+): Promise<UserPoints> {
+  if (!userId) return emptyPoints(userId);
+  const entry = await getUserPoints(userId);
+  entry.points = Math.max(0, entry.points - Math.max(0, amount));
+  return persist(entry);
+}
 
 // =============================================================================
 // Server Functions
