@@ -227,6 +227,20 @@ function DashboardPage() {
           </Link>
         )}
 
+        {/* Cost of living calculator link */}
+        <Link
+          to="/cost-of-living"
+          className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-white p-4 transition-all hover:shadow-md"
+        >
+          <span className="text-2xl">🧮</span>
+          <div className="flex-1">
+            <h3 className="text-sm font-semibold text-gray-900">Cost of living calculator</h3>
+            <p className="text-xs text-gray-500">
+              Compare monthly expenses between two cities.
+            </p>
+          </div>
+          <span className="text-sm font-medium text-brand-primary-500">Compare →</span>
+        </Link>
         {/* Featured destination hero */}
         {!loading && destinations.length > 0 && (
           <Link

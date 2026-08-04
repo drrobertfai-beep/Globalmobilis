@@ -126,9 +126,18 @@ function DestinationDetailPage() {
           <div className="absolute -top-40 -right-40 h-[500px] w-[500px] rounded-full bg-white blur-3xl" />
         </div>
         <div className="relative mx-auto max-w-6xl px-4 pb-12 pt-24 sm:px-6 sm:pt-32">
-          <Link to="/destinations" className="mb-6 inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-sm hover:bg-white/30 transition-colors">
-            ←
-          </Link>
+          <div className="mb-6 flex items-center gap-2">
+            <Link to="/destinations" className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-sm hover:bg-white/30 transition-colors">
+              ←
+            </Link>
+            <Link
+              to="/cost-of-living"
+              search={{ to: dest.id }}
+              className="inline-flex h-9 items-center rounded-full bg-white/20 px-4 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/30"
+            >
+              🧮 Compare cost of living →
+            </Link>
+          </div>
           <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-4">
               <span className="text-5xl">{dest.flag_emoji}</span>
