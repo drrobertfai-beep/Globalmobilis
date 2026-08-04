@@ -241,6 +241,20 @@ function DashboardPage() {
           </div>
           <span className="text-sm font-medium text-brand-primary-500">Compare →</span>
         </Link>
+        {/* Visa preparation card */}
+        <Link
+          to="/visa-guides"
+          className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-white p-4 transition-all hover:shadow-md"
+        >
+          <span className="text-2xl">🛂</span>
+          <div className="flex-1">
+            <h3 className="text-sm font-semibold text-gray-900">Visa Preparation</h3>
+            <p className="text-xs text-gray-500">
+              Step-by-step guides with document checklists, timelines and costs.
+            </p>
+          </div>
+          <span className="text-sm font-medium text-brand-primary-500">Guides →</span>
+        </Link>
         {/* Featured destination hero */}
         {!loading && destinations.length > 0 && (
           <Link
