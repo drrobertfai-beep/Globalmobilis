@@ -23,6 +23,9 @@ export interface Message {
   text: string;
   timestamp: string; // ISO
   read: boolean;
+  /** On-demand translation (never persisted — computed at request time). */
+  translatedText?: string;
+  translatedLang?: string;
 }
 
 export interface Conversation {
@@ -53,6 +56,9 @@ export interface MessageView {
   timestamp: string;
   isMine: boolean;
   read: boolean;
+  /** On-demand translation (never persisted — computed at request time). */
+  translatedText?: string;
+  translatedLang?: string;
 }
 
 export interface ThreadView {
@@ -233,12 +239,16 @@ export const listConversations = createServerFn({ method: "GET" }).handler(
 );
 
 /** Get messages for a conversation; marks incoming messages as read. */
-export const getMessages = createServerFn({ method: "GET" }).handler(
+export const getMessages = createServerFn({ method: "POST" }).handler(
   async (data: unknown): Promise<ThreadView | { error: string }> => {
     const user = await getCurrentUser();
     if (!user) return { error: "You must be signed in to view messages." };
 
-    const { conversationId } = (data || {}) as { conversationId?: string };
+    // TanStack Start wraps a single non-FormData arg as { data: <arg> };
+    // unwrap like sendMessage does (see getStrField in forums.ts).
+    const raw = (data ?? {}) as Record<string, unknown>;
+    const inner = raw.data && typeof raw.data === "object" ? (raw.data as Record<string, unknown>) : raw;
+    const conversationId = typeof inner.conversationId === "string" ? inner.conversationId : undefined;
     if (!conversationId) return { error: "Conversation is required." };
 
     const conversations = readConversations();
