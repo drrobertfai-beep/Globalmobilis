@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { SESSION_COOKIE, verifySessionToken } from "./auth";
 import type { AuthSession } from "./auth";
+import { isPremiumFromPoints } from "./redemption";
 
 // =============================================================================
 // Premium / subscription helpers
@@ -154,12 +155,20 @@ async function buildStatus(session: AuthSession | null): Promise<PremiumStatus> 
     };
   }
   const tier = (await fetchUserTier(session.userId)) ?? session.subscriptionTier ?? "free";
+  // Points-based premium: redeeming premium_1mo (30d) or premium_1yr (365d)
+  // via the rewards system grants premium even without a Stripe subscription.
+  const pointsPremium = await isPremiumFromPoints(session.userId);
+  const effectiveTier = pointsPremium && !isSubscribed(tier) ? "premium" : tier;
   return {
-    subscribed: isSubscribed(tier),
-    tier,
+    subscribed: isSubscribed(effectiveTier),
+    tier: effectiveTier,
     name: session.name,
     email: session.email,
-    planLabel: isSubscribed(tier) ? TIER_LABELS[tier] ?? "Premium" : null,
+    planLabel: isSubscribed(effectiveTier)
+      ? pointsPremium && !isSubscribed(tier)
+        ? "Premium (Points)"
+        : TIER_LABELS[tier] ?? "Premium"
+      : null,
     loggedIn: true,
   };
 }
