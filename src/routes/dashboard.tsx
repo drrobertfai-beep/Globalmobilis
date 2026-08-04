@@ -4,6 +4,7 @@ import { getFeaturedDestinations, searchDestinations } from "~/lib/destinations"
 import { LogoIcon } from "~/components/Logo";
 import { BottomNav } from "~/components/BottomNav";
 import { getMyTimeline, type TimelineDetail } from "~/lib/timeline";
+import { formatSlot, getMyBookings, type BookingView } from "~/lib/mentors";
 import type { Destination } from "~/db.types";
 
 export const Route = createFileRoute("/dashboard")({
@@ -25,6 +26,7 @@ function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [referral, setReferral] = useState<any>(null);
   const [timeline, setTimeline] = useState<TimelineDetail | null>(null);
+  const [bookings, setBookings] = useState<BookingView[]>([]);
 
   useEffect(() => {
     getFeaturedDestinations().then((data) => {
@@ -43,6 +45,10 @@ function DashboardPage() {
     // Fetch relocation timeline (if any)
     getMyTimeline()
       .then((tl) => setTimeline(tl as unknown as TimelineDetail | null))
+      .catch(() => {});
+    // Fetch upcoming consultations
+    getMyBookings()
+      .then((bs) => setBookings(bs as unknown as BookingView[]))
       .catch(() => {});
   }, []);
 
@@ -255,6 +261,68 @@ function DashboardPage() {
           </div>
           <span className="text-sm font-medium text-brand-primary-500">Guides →</span>
         </Link>
+        {/* Upcoming consultations widget */}
+        {(() => {
+          const next = bookings
+            .filter(
+              (b) => b.status === "confirmed" && new Date(b.slot).getTime() > Date.now(),
+            )
+            .sort(
+              (a, b) => new Date(a.slot).getTime() - new Date(b.slot).getTime(),
+            )[0];
+          if (next) {
+            return (
+              <Link
+                to="/consultation/$bookingId"
+                params={{ bookingId: next.id }}
+                className="block rounded-2xl border border-gray-200 bg-white p-5 transition-all hover:shadow-md"
+              >
+                <div className="mb-3 flex items-center justify-between">
+                  <h3 className="font-bold text-gray-900">🎥 Upcoming Consultation</h3>
+                  <span className="rounded-full bg-green-50 px-3 py-0.5 text-xs font-semibold text-green-600">
+                    Confirmed
+                  </span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div
+                    className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white ${next.mentorAvatarColor}`}
+                  >
+                    {next.mentorAvatar}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-semibold text-gray-900">
+                      {next.mentorName}
+                      {next.mentorTitle ? ` · ${next.mentorTitle}` : ""}
+                    </p>
+                    <p className="truncate text-xs text-gray-500">
+                      {formatSlot(next.slot)} · {next.mentorFlag} {next.mentorCity}
+                    </p>
+                  </div>
+                  <span className="shrink-0 rounded-full bg-brand-secondary-500 px-4 py-1.5 text-sm font-semibold text-white">
+                    Join Call →
+                  </span>
+                </div>
+              </Link>
+            );
+          }
+          return (
+            <Link
+              to="/mentors"
+              className="flex items-center gap-4 rounded-2xl border-2 border-brand-secondary-500/30 bg-gradient-to-r from-[#F0FBFA] to-[#E6F7F5] p-5 transition-all hover:shadow-md"
+            >
+              <span className="text-3xl">🎥</span>
+              <div className="flex-1">
+                <h3 className="font-bold text-gray-900">Talk to a local expert</h3>
+                <p className="text-sm text-gray-600">
+                  Book a 1:1 video call with a verified mentor in your destination city.
+                </p>
+              </div>
+              <span className="shrink-0 rounded-full bg-brand-secondary-500 px-4 py-1.5 text-sm font-semibold text-white">
+                Book a mentor →
+              </span>
+            </Link>
+          );
+        })()}
         {/* Featured destination hero */}
         {!loading && destinations.length > 0 && (
           <Link

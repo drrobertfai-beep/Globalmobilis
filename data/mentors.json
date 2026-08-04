@@ -1,0 +1,373 @@
+[
+  {
+    "id": "m_tor_priya",
+    "name": "Priya Sharma",
+    "city": "Toronto",
+    "country": "Canada",
+    "flag": "🇨🇦",
+    "avatar": "PS",
+    "avatarColor": "bg-brand-primary-500",
+    "title": "Immigration Lawyer",
+    "bio": "Licensed Canadian immigration lawyer with 12 years of experience and 800+ successful applications. I help families, professionals and students navigate work permits, permanent residence and citizenship. Book a session to get a straight answer on your eligibility and a clear action plan for your Canadian dream.",
+    "expertise": [
+      "visa",
+      "work permit",
+      "PR"
+    ],
+    "hourlyRate": 95,
+    "currency": "USD",
+    "rating": 4.9,
+    "reviewCount": 87,
+    "languages": [
+      "English",
+      "Hindi",
+      "Punjabi"
+    ],
+    "availableTimeSlots": [
+      "2026-08-05T09:00:00.000Z",
+      "2026-08-05T11:00:00.000Z",
+      "2026-08-05T14:00:00.000Z",
+      "2026-08-05T16:00:00.000Z",
+      "2026-08-05T18:00:00.000Z"
+    ]
+  },
+  {
+    "id": "m_tor_david",
+    "name": "David Kalu",
+    "city": "Toronto",
+    "country": "Canada",
+    "flag": "🇨🇦",
+    "avatar": "DK",
+    "avatarColor": "bg-brand-coral-500",
+    "title": "Tech Recruiter",
+    "bio": "Senior technical recruiter at a Toronto scale-up. I've screened 5,000+ candidates for Canadian tech roles and know exactly what hiring managers look for. I'll review your resume, prep you for interviews and help you break into Toronto's booming tech scene.",
+    "expertise": [
+      "tech jobs",
+      "resume",
+      "interviews"
+    ],
+    "hourlyRate": 65,
+    "currency": "USD",
+    "rating": 4.7,
+    "reviewCount": 54,
+    "languages": [
+      "English",
+      "Igbo"
+    ],
+    "availableTimeSlots": [
+      "2026-08-05T09:00:00.000Z",
+      "2026-08-05T11:00:00.000Z",
+      "2026-08-05T14:00:00.000Z",
+      "2026-08-05T16:00:00.000Z"
+    ]
+  },
+  {
+    "id": "m_ber_lena",
+    "name": "Lena Hoffmann",
+    "city": "Berlin",
+    "country": "Germany",
+    "flag": "🇩🇪",
+    "avatar": "LH",
+    "avatarColor": "bg-brand-secondary-500",
+    "title": "Visa Specialist",
+    "bio": "Former case officer at the Berlin Ausländerbehörde, now an independent relocation consultant. I specialise in EU Blue Cards, freelance (freiberuflich) visas and family reunification. Clear, practical guidance on the documents that actually matter.",
+    "expertise": [
+      "visa",
+      "blue card",
+      "residence permit"
+    ],
+    "hourlyRate": 70,
+    "currency": "USD",
+    "rating": 4.8,
+    "reviewCount": 63,
+    "languages": [
+      "German",
+      "English",
+      "French"
+    ],
+    "availableTimeSlots": [
+      "2026-08-05T09:00:00.000Z",
+      "2026-08-05T11:00:00.000Z",
+      "2026-08-05T14:00:00.000Z",
+      "2026-08-05T16:00:00.000Z",
+      "2026-08-05T18:00:00.000Z"
+    ]
+  },
+  {
+    "id": "m_ber_jonas",
+    "name": "Jonas Weber",
+    "city": "Berlin",
+    "country": "Germany",
+    "flag": "🇩🇪",
+    "avatar": "JW",
+    "avatarColor": "bg-brand-gold-500",
+    "title": "Startup Founder",
+    "bio": "Founded two Berlin startups and mentored 40+ founders through Tech Open Air and Startup Grind. If you're moving to build or join a startup, I'll help you understand the local ecosystem, meet the right people and raise your first round.",
+    "expertise": [
+      "startups",
+      "networking",
+      "funding"
+    ],
+    "hourlyRate": 80,
+    "currency": "USD",
+    "rating": 4.6,
+    "reviewCount": 41,
+    "languages": [
+      "German",
+      "English"
+    ],
+    "availableTimeSlots": [
+      "2026-08-05T09:00:00.000Z",
+      "2026-08-05T11:00:00.000Z",
+      "2026-08-05T14:00:00.000Z",
+      "2026-08-05T16:00:00.000Z"
+    ]
+  },
+  {
+    "id": "m_dub_omar",
+    "name": "Omar Al-Farsi",
+    "city": "Dubai",
+    "country": "UAE",
+    "flag": "🇦🇪",
+    "avatar": "OA",
+    "avatarColor": "bg-brand-primary-700",
+    "title": "Business Setup Consultant",
+    "bio": "15 years in Dubai's business landscape. I guide entrepreneurs through company formation, free zone selection, licensing and the new UAE corporate tax regime. From golden visa eligibility to bank account opening — I've done it hundreds of times.",
+    "expertise": [
+      "company setup",
+      "free zone",
+      "tax"
+    ],
+    "hourlyRate": 120,
+    "currency": "USD",
+    "rating": 5,
+    "reviewCount": 112,
+    "languages": [
+      "Arabic",
+      "English",
+      "Urdu"
+    ],
+    "availableTimeSlots": [
+      "2026-08-05T09:00:00.000Z",
+      "2026-08-05T11:00:00.000Z",
+      "2026-08-05T14:00:00.000Z",
+      "2026-08-05T16:00:00.000Z",
+      "2026-08-05T18:00:00.000Z",
+      "2026-08-06T09:00:00.000Z"
+    ]
+  },
+  {
+    "id": "m_dub_fatima",
+    "name": "Fatima Rahman",
+    "city": "Dubai",
+    "country": "UAE",
+    "flag": "🇦🇪",
+    "avatar": "FR",
+    "avatarColor": "bg-brand-coral-700",
+    "title": "Real Estate Agent",
+    "bio": "RERA-certified agent with a portfolio across Dubai Marina, Downtown and JVC. Whether you're renting your first apartment sight-unseen or buying an off-plan investment, I'll help you avoid the tourist traps and get a fair deal.",
+    "expertise": [
+      "housing",
+      "rentals",
+      "relocation"
+    ],
+    "hourlyRate": 55,
+    "currency": "USD",
+    "rating": 4.5,
+    "reviewCount": 38,
+    "languages": [
+      "English",
+      "Bengali",
+      "Hindi"
+    ],
+    "availableTimeSlots": [
+      "2026-08-05T09:00:00.000Z",
+      "2026-08-05T11:00:00.000Z",
+      "2026-08-05T14:00:00.000Z",
+      "2026-08-05T16:00:00.000Z"
+    ]
+  },
+  {
+    "id": "m_lis_ines",
+    "name": "Inês Costa",
+    "city": "Lisbon",
+    "country": "Portugal",
+    "flag": "🇵🇹",
+    "avatar": "IC",
+    "avatarColor": "bg-brand-gold-700",
+    "title": "D8 Visa Expert",
+    "bio": "Portuguese immigration lawyer specialising in the D8 digital nomad visa and NHR tax regime. I've secured 200+ D8 approvals for remote workers. I'll walk you through income thresholds, NIF, NHR and the exact paperwork — no agency fees.",
+    "expertise": [
+      "d8 visa",
+      "remote work",
+      "nif"
+    ],
+    "hourlyRate": 75,
+    "currency": "USD",
+    "rating": 4.9,
+    "reviewCount": 96,
+    "languages": [
+      "Portuguese",
+      "English",
+      "Spanish"
+    ],
+    "availableTimeSlots": [
+      "2026-08-05T09:00:00.000Z",
+      "2026-08-05T11:00:00.000Z",
+      "2026-08-05T14:00:00.000Z",
+      "2026-08-05T16:00:00.000Z",
+      "2026-08-05T18:00:00.000Z"
+    ]
+  },
+  {
+    "id": "m_lis_marco",
+    "name": "Marco Silva",
+    "city": "Lisbon",
+    "country": "Portugal",
+    "flag": "🇵🇹",
+    "avatar": "MS",
+    "avatarColor": "bg-brand-secondary-700",
+    "title": "Expat Life Coach",
+    "bio": "Moved from São Paulo to Lisbon in 2018 and never looked back. I coach expats through culture shock, language confidence and building a real social life abroad. Practical, warm, no-nonsense support for your first year in Portugal.",
+    "expertise": [
+      "culture",
+      "integration",
+      "career change"
+    ],
+    "hourlyRate": 45,
+    "currency": "USD",
+    "rating": 4.7,
+    "reviewCount": 59,
+    "languages": [
+      "Portuguese",
+      "English",
+      "Spanish"
+    ],
+    "availableTimeSlots": [
+      "2026-08-05T09:00:00.000Z",
+      "2026-08-05T11:00:00.000Z",
+      "2026-08-05T14:00:00.000Z",
+      "2026-08-05T16:00:00.000Z"
+    ]
+  },
+  {
+    "id": "m_lon_charlotte",
+    "name": "Charlotte Hayes",
+    "city": "London",
+    "country": "UK",
+    "flag": "🇬🇧",
+    "avatar": "CH",
+    "avatarColor": "bg-brand-primary-500",
+    "title": "Finance Recruiter",
+    "bio": "Executive recruiter at a City firm placing candidates across banking, fintech and asset management. I'll help you translate your experience into a CV that London recruiters understand, navigate visa sponsorship and ace competency interviews.",
+    "expertise": [
+      "finance jobs",
+      "CV",
+      "banking"
+    ],
+    "hourlyRate": 85,
+    "currency": "USD",
+    "rating": 4.8,
+    "reviewCount": 71,
+    "languages": [
+      "English"
+    ],
+    "availableTimeSlots": [
+      "2026-08-05T09:00:00.000Z",
+      "2026-08-05T11:00:00.000Z",
+      "2026-08-05T14:00:00.000Z",
+      "2026-08-05T16:00:00.000Z",
+      "2026-08-05T18:00:00.000Z"
+    ]
+  },
+  {
+    "id": "m_lon_daniel",
+    "name": "Daniel Osei",
+    "city": "London",
+    "country": "UK",
+    "flag": "🇬🇧",
+    "avatar": "DO",
+    "avatarColor": "bg-brand-secondary-500",
+    "title": "NHS Registration Guide",
+    "bio": "Registered nurse and founder of a medical-recruitment support network. I guide international doctors and nurses through GMC/NMC registration, IELTS/OET requirements, and landing their first NHS job — I've supported 300+ healthcare professionals.",
+    "expertise": [
+      "nhs",
+      "nursing",
+      "medical jobs"
+    ],
+    "hourlyRate": 60,
+    "currency": "USD",
+    "rating": 4.6,
+    "reviewCount": 44,
+    "languages": [
+      "English",
+      "Twi"
+    ],
+    "availableTimeSlots": [
+      "2026-08-05T09:00:00.000Z",
+      "2026-08-05T11:00:00.000Z",
+      "2026-08-05T14:00:00.000Z",
+      "2026-08-05T16:00:00.000Z"
+    ]
+  },
+  {
+    "id": "m_syd_grace",
+    "name": "Grace Thompson",
+    "city": "Sydney",
+    "country": "Australia",
+    "flag": "🇦🇺",
+    "avatar": "GT",
+    "avatarColor": "bg-brand-coral-500",
+    "title": "Migration Agent",
+    "bio": "MARA-registered migration agent (MARN 1900234) with 10 years in skilled migration. From EOI and points testing to employer sponsorship and 189/190 visas, I give you an honest assessment of your chances and the fastest compliant pathway.",
+    "expertise": [
+      "visa",
+      "skilled migration",
+      "PR"
+    ],
+    "hourlyRate": 90,
+    "currency": "USD",
+    "rating": 4.8,
+    "reviewCount": 88,
+    "languages": [
+      "English"
+    ],
+    "availableTimeSlots": [
+      "2026-08-05T09:00:00.000Z",
+      "2026-08-05T11:00:00.000Z",
+      "2026-08-05T14:00:00.000Z",
+      "2026-08-05T16:00:00.000Z",
+      "2026-08-05T18:00:00.000Z"
+    ]
+  },
+  {
+    "id": "m_syd_sam",
+    "name": "Sam Whitfield",
+    "city": "Sydney",
+    "country": "Australia",
+    "flag": "🇦🇺",
+    "avatar": "SW",
+    "avatarColor": "bg-brand-gold-500",
+    "title": "Education Consultant",
+    "bio": "Former international student now advising families and students on Australian universities, student visas and scholarships. I help you shortlist the right courses, nail your application and get your enrolment sorted before you land.",
+    "expertise": [
+      "universities",
+      "student visa",
+      "scholarships"
+    ],
+    "hourlyRate": 60,
+    "currency": "USD",
+    "rating": 4.6,
+    "reviewCount": 47,
+    "languages": [
+      "English",
+      "Mandarin"
+    ],
+    "availableTimeSlots": [
+      "2026-08-05T09:00:00.000Z",
+      "2026-08-05T11:00:00.000Z",
+      "2026-08-05T14:00:00.000Z",
+      "2026-08-05T16:00:00.000Z"
+    ]
+  }
+]
