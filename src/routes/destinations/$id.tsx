@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { SEED_DESTINATIONS } from "~/lib/destinations";
 import { getDestinationResources, type School, type CommunityLink, type JobBoard, type HousingSite } from "~/lib/destination-resources";
+import { getGuidesForDestination } from "~/lib/visa-guides";
 
 export const Route = createFileRoute("/destinations/$id")({
   loader: ({ params }) => ({
@@ -101,6 +102,7 @@ function DestinationDetailPage() {
 
   const dest = SEED_DESTINATIONS.find((d) => d.id === id);
   const resources = getDestinationResources(id);
+  const visaGuides = getGuidesForDestination(id);
 
   if (!dest) {
     return (
@@ -233,11 +235,51 @@ function DestinationDetailPage() {
                       ))}
                     </div>
                     <ExternalLink href={resources.visaInfo.officialUrl}>Official immigration website</ExternalLink>
+                    {visaGuides.length > 0 && (
+                      <Link
+                        to="/visa-guides"
+                        className="mt-1 inline-flex items-center gap-1 font-medium text-amber-700 hover:text-amber-800 hover:underline"
+                      >
+                        Step-by-step guide →
+                      </Link>
+                    )}
                   </div>
                 </div>
               </div>
             )}
 
+            {/* Visa application guides */}
+            {visaGuides.length > 0 && (
+              <div className="rounded-2xl border border-blue-100 bg-blue-50 p-6">
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">📋</span>
+                  <div className="flex-1">
+                    <h3 className="mb-1 text-lg font-bold text-gray-900">Visa Application Guides</h3>
+                    <p className="mb-3 text-sm leading-relaxed text-gray-600">
+                      Step-by-step application guides with document checklists, timelines, costs and official links.
+                    </p>
+                    <div className="space-y-2">
+                      {visaGuides.map((g) => (
+                        <Link
+                          key={g.id}
+                          to="/visa-guides/$guideId"
+                          params={{ guideId: g.id }}
+                          className="flex items-center justify-between gap-3 rounded-xl border border-blue-100 bg-white px-4 py-3 transition-all hover:border-brand-primary-300 hover:shadow-sm"
+                        >
+                          <div>
+                            <p className="text-sm font-semibold text-gray-900">{g.visaType}</p>
+                            <p className="text-xs text-gray-500">
+                              {g.steps.length} steps · {g.totalTimeframe} · {g.totalCost}
+                            </p>
+                          </div>
+                          <span className="shrink-0 text-sm font-medium text-brand-primary-500">Open →</span>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
             {/* Healthcare */}
             {resources?.healthcare && (
               <div className="rounded-2xl border border-green-100 bg-green-50 p-6">
