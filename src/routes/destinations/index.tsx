@@ -4,6 +4,16 @@ import { getDestinations, getContinents, searchDestinations } from "~/lib/destin
 import type { Destination } from "~/db.types";
 
 export const Route = createFileRoute("/destinations/")({
+  head: () => ({
+    meta: [
+      { title: "Explore Destinations — Global Mobilis" },
+      {
+        name: "description",
+        content:
+          "Compare quality of life, jobs, cost of living, visas, and more across 36 cities worldwide. Find your next home with Global Mobilis.",
+      },
+    ],
+  }),
   component: DestinationsPage,
 });
 

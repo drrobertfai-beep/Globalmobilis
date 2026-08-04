@@ -18,6 +18,16 @@ import {
 } from "~/lib/timeline";
 
 export const Route = createFileRoute("/timeline")({
+  head: () => ({
+    meta: [
+      { title: "Relocation Timeline — Global Mobilis" },
+      {
+        name: "description",
+        content:
+          "Plan your move abroad step by step — visas, housing, jobs, and more — with Global Mobilis relocation timelines.",
+      },
+    ],
+  }),
   component: TimelinePage,
 });
 

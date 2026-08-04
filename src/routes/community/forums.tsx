@@ -12,6 +12,16 @@ import {
 import { BottomNav } from "~/components/BottomNav";
 
 export const Route = createFileRoute("/community/forums")({
+  head: () => ({
+    meta: [
+      { title: "Expat Forums — Global Mobilis" },
+      {
+        name: "description",
+        content:
+          "Ask questions, share advice, and connect with expats around the world on Global Mobilis forums.",
+      },
+    ],
+  }),
   component: ForumsPage,
 });
 
