@@ -132,13 +132,12 @@ function DestinationDetailPage() {
             <Link to="/destinations" className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-sm hover:bg-white/30 transition-colors">
               ←
             </Link>
-            <Link
-              to="/cost-of-living"
-              search={{ to: dest.id }}
+            <a
+              href={"/cost-of-living?to=" + encodeURIComponent(String(dest.id))}
               className="inline-flex h-9 items-center rounded-full bg-white/20 px-4 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/30"
             >
               🧮 Compare cost of living →
-            </Link>
+            </a>
           </div>
           <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-4">
