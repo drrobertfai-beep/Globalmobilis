@@ -98,7 +98,7 @@ function SetupFlow({ onCreated }: { onCreated: (tl: TimelineDetail) => void }) {
       const fd = new FormData();
       fd.set("destination", destination);
       fd.set("moveDate", moveDate);
-      const result = (await generateTimeline(fd)) as any;
+      const result = (await generateTimeline({ data: fd })) as any;
       if (result.success && result.timeline) {
         onCreated(result.timeline as TimelineDetail);
       } else {
@@ -399,7 +399,7 @@ function TimelineView({
       const fd = new FormData();
       fd.set("taskId", task.id);
       fd.set("completed", String(!task.completed));
-      const result = (await updateTask(fd)) as any;
+      const result = (await updateTask({ data: fd })) as any;
       if (result.success && result.timeline) {
         onChanged(result.timeline as TimelineDetail);
       }
@@ -413,7 +413,7 @@ function TimelineView({
       const fd = new FormData();
       fd.set("taskId", task.id);
       fd.set("notes", notes);
-      const result = (await updateTask(fd)) as any;
+      const result = (await updateTask({ data: fd })) as any;
       if (result.success && result.timeline) {
         onChanged(result.timeline as TimelineDetail);
         return true;

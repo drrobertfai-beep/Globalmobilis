@@ -15,7 +15,7 @@ export function EmailSignup() {
       const fd = new FormData();
       fd.set("email", email);
       if (name) fd.set("name", name);
-      const result = await submitToWaitlist(fd);
+      const result = await submitToWaitlist({ data: fd });
 
       if (result.success) {
         setStatus("success");

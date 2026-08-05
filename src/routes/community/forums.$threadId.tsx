@@ -118,7 +118,7 @@ function ThreadDetailPage() {
       const fn = thread.isUpvoted ? unvoteThread : upvoteThread;
       const fd = new FormData();
       fd.set("threadId", thread.id);
-      const result = (await fn(fd)) as unknown as ForumActionResult;
+      const result = (await fn({ data: fd })) as unknown as ForumActionResult;
       if (result.success && result.thread && data) {
         setData({ ...data, thread: result.thread });
       }
@@ -134,7 +134,7 @@ function ThreadDetailPage() {
       const fn = reply.isUpvoted ? unvoteReply : upvoteReply;
       const fd = new FormData();
       fd.set("replyId", reply.id);
-      const result = (await fn(fd)) as unknown as ForumActionResult;
+      const result = (await fn({ data: fd })) as unknown as ForumActionResult;
       if (result.success && result.reply && data) {
         setData({
           ...data,
@@ -155,7 +155,7 @@ function ThreadDetailPage() {
       const fd = new FormData();
       fd.set("threadId", thread?.id ?? "");
       fd.set("replyId", reply.id);
-      const result = (await markAcceptedReply(fd)) as unknown as ForumActionResult;
+      const result = (await markAcceptedReply({ data: fd })) as unknown as ForumActionResult;
       if (result.success && result.reply && data) {
         const updated = result.reply as ReplyView;
         setData({
@@ -187,7 +187,7 @@ function ThreadDetailPage() {
       const fd = new FormData();
       fd.set("threadId", thread.id);
       fd.set("body", replyText);
-      const result = (await createReply(fd)) as unknown as ForumActionResult;
+      const result = (await createReply({ data: fd })) as unknown as ForumActionResult;
       if (result.success) {
         setReplyText("");
         await load();

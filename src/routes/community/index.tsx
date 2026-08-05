@@ -134,7 +134,7 @@ function CreateGroupModal({
       fd.set("color", GROUP_TYPE_COLORS[form.type] || "bg-brand-secondary-500");
       fd.set("city", form.city);
       fd.set("country", form.country);
-      const result = (await createGroup(fd)) as any;
+      const result = (await createGroup({ data: fd })) as any;
       if (result.success) {
         onCreated(result.group as GroupView);
       } else {
@@ -257,7 +257,7 @@ function CreateEventModal({
       fd.set("date", form.date);
       fd.set("time", form.time);
       fd.set("location", form.location);
-      const result = (await createEvent(fd)) as any;
+      const result = (await createEvent({ data: fd })) as any;
       if (result.success) {
         onCreated(result.event as EventView);
       } else {
@@ -421,7 +421,7 @@ function CommunityPage() {
     try {
       const fd = new FormData();
       fd.set("groupId", group.id);
-      const result = (await joinGroup(fd)) as any;
+      const result = (await joinGroup({ data: fd })) as any;
       if (result.success && result.group) {
         setData((prev) =>
           prev
@@ -443,7 +443,7 @@ function CommunityPage() {
     try {
       const fd = new FormData();
       fd.set("groupId", group.id);
-      const result = (await leaveGroup(fd)) as any;
+      const result = (await leaveGroup({ data: fd })) as any;
       if (result.success && result.group) {
         setData((prev) =>
           prev
@@ -465,7 +465,7 @@ function CommunityPage() {
     try {
       const fd = new FormData();
       fd.set("eventId", event.id);
-      const result = (await rsvpToEvent(fd)) as any;
+      const result = (await rsvpToEvent({ data: fd })) as any;
       if (result.success && result.event) {
         setData((prev) =>
           prev

@@ -23,7 +23,7 @@ function LoginPage() {
       const fd = new FormData();
       fd.set("email", email);
       fd.set("password", password);
-      const result = await logIn(fd) as any;
+      const result = await logIn({ data: fd }) as any;
       if (result.success) {
         setSuccess(true);
         // Set cookie and redirect
