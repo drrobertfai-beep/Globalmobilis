@@ -42,7 +42,7 @@ function SignupPage() {
       fd.set("password", password);
       fd.set("name", name);
       if (refCode) fd.set("referralCode", refCode);
-      const result = await signUp(fd) as any;
+      const result = await signUp({ data: fd }) as any;
       if (result.success) {
         setSuccess(true);
         document.cookie = result.cookie;

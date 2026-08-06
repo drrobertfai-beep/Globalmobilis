@@ -229,7 +229,7 @@ function MessageThreadPage() {
       const fd = new FormData();
       fd.set("conversationId", id);
       fd.set("text", input);
-      const result = (await sendMessage(fd)) as any;
+      const result = (await sendMessage({ data: fd })) as any;
       if (result.success && result.message) {
         setThread((prev) =>
           prev
