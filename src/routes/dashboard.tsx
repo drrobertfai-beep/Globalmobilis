@@ -5,6 +5,7 @@ import { LogoIcon } from "~/components/Logo";
 import { BottomNav } from "~/components/BottomNav";
 import { getMyTimeline, type TimelineDetail } from "~/lib/timeline";
 import { formatSlot, getMyBookings, type BookingView } from "~/lib/mentors";
+import { getMyPoints, type UserPoints } from "~/lib/points";
 import type { Destination } from "~/db.types";
 
 export const Route = createFileRoute("/dashboard")({
@@ -27,6 +28,8 @@ function DashboardPage() {
   const [referral, setReferral] = useState<any>(null);
   const [timeline, setTimeline] = useState<TimelineDetail | null>(null);
   const [bookings, setBookings] = useState<BookingView[]>([]);
+  const [points, setPoints] = useState<UserPoints | null>(null);
+  const [pointsLoaded, setPointsLoaded] = useState(false);
 
   useEffect(() => {
     getFeaturedDestinations().then((data) => {
@@ -50,6 +53,13 @@ function DashboardPage() {
     getMyBookings()
       .then((bs) => setBookings(bs as unknown as BookingView[]))
       .catch(() => {});
+    // Fetch points balance (null when signed out)
+    getMyPoints()
+      .then((p) => {
+        setPoints(p as UserPoints | null);
+        setPointsLoaded(true);
+      })
+      .catch(() => setPointsLoaded(true));
   }, []);
 
   return (
@@ -99,6 +109,53 @@ function DashboardPage() {
           ))}
         </div>
 
+        {/* Points card */}
+        <div className="rounded-2xl border border-gray-200 bg-white p-5">
+          <div className="mb-3 flex items-center justify-between">
+            <h3 className="font-bold text-gray-900">💎 Your Points</h3>
+            {pointsLoaded && points && (
+              <span className="rounded-full bg-[#FFF8ED] px-3 py-0.5 text-sm font-bold text-[#B8860B]">
+                {points.points} pts
+              </span>
+            )}
+          </div>
+          {!pointsLoaded ? (
+            <p className="text-sm text-gray-500">Loading your points…</p>
+          ) : points ? (
+            <>
+              <p className="mb-3 text-sm text-gray-600">
+                Earn points by starting threads, replying, and getting upvoted in the community — then redeem them for premium access.
+              </p>
+              {points.badges.length > 0 && (
+                <div className="mb-3 flex flex-wrap gap-1.5">
+                  {points.badges.map((badge) => (
+                    <span key={badge} className="rounded-full bg-brand-primary-50 px-2.5 py-0.5 text-[11px] font-semibold text-brand-primary-700">
+                      🏅 {badge}
+                    </span>
+                  ))}
+                </div>
+              )}
+              <Link
+                to="/rewards"
+                className="inline-block rounded-lg bg-[#0E4F8B] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#1B7A9B]"
+              >
+                Redeem Rewards →
+              </Link>
+            </>
+          ) : (
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-sm text-gray-600">
+                Sign in to start earning points through community participation.
+              </p>
+              <Link
+                to="/login"
+                className="inline-block rounded-lg border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 transition-colors hover:border-gray-400"
+              >
+                Sign In
+              </Link>
+            </div>
+          )}
+        </div>
         {/* Survey CTA */}
         <Link
           to="/survey"

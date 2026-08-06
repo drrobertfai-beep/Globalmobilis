@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { LogoIcon } from "~/components/Logo";
 import { PremiumBadge } from "~/components/PremiumBadge";
+import { PointsIndicator } from "~/components/PointsIndicator";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -9,6 +10,7 @@ const navLinks = [
   { href: "/premium", label: "Premium" },
   { href: "/media", label: "Media" },
   { href: "/community", label: "Community" },
+  { href: "/rewards", label: "Rewards" },
   { href: "/dashboard", label: "Dashboard" },
 ];
 
@@ -44,6 +46,7 @@ export function Header() {
         {/* Auth buttons */}
         <div className="flex items-center gap-3">
           <PremiumBadge />
+          <PointsIndicator />
           <Link
             to="/login"
             className="rounded-full border border-gray-200 px-5 py-2 text-sm font-semibold text-gray-700 transition-all hover:border-gray-300 hover:shadow-md"
