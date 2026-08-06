@@ -249,3 +249,12 @@ CREATE TRIGGER trg_events_updated_at
 CREATE TRIGGER trg_mentorship_updated_at
   BEFORE UPDATE ON mentorship_connections
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+-- =============================================================================
+-- 12. PASSWORD RESET TOKENS (serverless-safe: DB-backed, not in-memory)
+-- =============================================================================
+CREATE TABLE IF NOT EXISTS password_reset_tokens (
+  token      TEXT PRIMARY KEY,
+  email      TEXT NOT NULL,
+  expires_at TIMESTAMPTZ NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_password_reset_tokens_email ON password_reset_tokens (email);

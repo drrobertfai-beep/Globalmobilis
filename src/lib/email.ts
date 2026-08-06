@@ -39,8 +39,13 @@ async function sendViaAPI(to: string, subject: string, body: string): Promise<bo
         html: body,
       }),
     });
+    if (!res.ok) {
+      const detail = await res.text().catch(() => "");
+      console.error(`[Email] API returned ${res.status} for "${subject}" → ${to}: ${detail.slice(0, 300)}`);
+    }
     return res.ok;
-  } catch {
+  } catch (err) {
+    console.error(`[Email] API request failed for "${subject}" → ${to}:`, err);
     return false;
   }
 }
@@ -94,7 +99,7 @@ export function welcomeEmail(name: string): EmailOptions {
           <li>💬 Connect with fellow global citizens</li>
           <li>📊 Compare cost of living across cities</li>
         </ul>
-        <a href="${process.env.APP_URL || "https://globalmobilis.vercel.app"}/destinations"
+        <a href="${process.env.APP_URL || "https://globalmobilis.com"}/destinations"
            style="display:inline-block;background:#0E4F8B;color:#fff;padding:12px 32px;border-radius:8px;text-decoration:none;font-weight:600;margin-top:12px">
           Start Exploring
         </a>
