@@ -1,4 +1,5 @@
 import { neon } from "@neondatabase/serverless";
+import { normalizeDbUrl } from "~/lib/db-url";
 import type {
   Destination,
   Community,
@@ -31,7 +32,7 @@ export const sql = () => {
       "DATABASE_URL is not set — connect a database (via the database card) before running queries.",
     );
   }
-  return neon(url);
+  return neon(normalizeDbUrl(url));
 };
 
 // =============================================================================

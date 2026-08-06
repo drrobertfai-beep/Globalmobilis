@@ -12,6 +12,7 @@ import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { sendEmail, welcomeEmail, passwordResetEmail } from "./email";
 import { recordReferralSignup } from "./referral";
+import { normalizeDbUrl } from "./db-url";
 
 // =============================================================================
 // Configuration
@@ -199,7 +200,7 @@ export const signUp = createServerFn({ method: "POST" }).handler(
       // Try database first
       if (process.env.DATABASE_URL) {
         const { neon } = await import("@neondatabase/serverless");
-        const sql = neon(process.env.DATABASE_URL);
+        const sql = neon(normalizeDbUrl(process.env.DATABASE_URL));
         const existing = await sql`SELECT id FROM users WHERE email = ${email.toLowerCase()}`;
         if (existing.length > 0) {
           return { success: false, error: "An account with this email already exists" };
@@ -285,7 +286,7 @@ export const logIn = createServerFn({ method: "POST" }).handler(
       // Try database first
       if (process.env.DATABASE_URL) {
         const { neon } = await import("@neondatabase/serverless");
-        const sql = neon(process.env.DATABASE_URL);
+        const sql = neon(normalizeDbUrl(process.env.DATABASE_URL));
         const result = await sql`
           SELECT id, name, email, password_hash, subscription_tier
           FROM users WHERE email = ${email.toLowerCase()}
@@ -369,7 +370,7 @@ export const requestPasswordReset = createServerFn({ method: "POST" }).handler(
       let userExists = false;
       if (process.env.DATABASE_URL) {
         const { neon } = await import("@neondatabase/serverless");
-        const sql = neon(process.env.DATABASE_URL);
+        const sql = neon(normalizeDbUrl(process.env.DATABASE_URL));
         const rows = await sql`SELECT id FROM users WHERE email = ${email.toLowerCase()}`;
         userExists = rows.length > 0;
       } else {
@@ -438,7 +439,7 @@ export const resetPassword = createServerFn({ method: "POST" }).handler(
 
       if (process.env.DATABASE_URL) {
         const { neon } = await import("@neondatabase/serverless");
-        const sql = neon(process.env.DATABASE_URL);
+        const sql = neon(normalizeDbUrl(process.env.DATABASE_URL));
         await sql`UPDATE users SET password_hash = ${passwordHash} WHERE email = ${stored.email}`;
       } else {
         const users = getUsers();

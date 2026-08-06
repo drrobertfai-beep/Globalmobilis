@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { SESSION_COOKIE, verifySessionToken } from "./auth";
 import type { AuthSession } from "./auth";
 import { isPremiumFromPoints } from "./redemption";
+import { normalizeDbUrl } from "./db-url";
 
 // =============================================================================
 // Premium / subscription helpers
@@ -91,7 +92,7 @@ async function fetchUserTier(userId: string): Promise<string | null> {
   if (process.env.DATABASE_URL) {
     try {
       const { neon } = await import("@neondatabase/serverless");
-      const sql = neon(process.env.DATABASE_URL);
+      const sql = neon(normalizeDbUrl(process.env.DATABASE_URL));
       const rows = await sql`SELECT subscription_tier FROM users WHERE id = ${userId}`;
       if (rows.length > 0) {
         const v = (rows[0] as Record<string, unknown>).subscription_tier;
@@ -112,7 +113,7 @@ async function upgradeUserToPremium(userId: string): Promise<boolean> {
   if (process.env.DATABASE_URL) {
     try {
       const { neon } = await import("@neondatabase/serverless");
-      const sql = neon(process.env.DATABASE_URL);
+      const sql = neon(normalizeDbUrl(process.env.DATABASE_URL));
       const res = await sql`
         UPDATE users SET subscription_tier = 'premium'
         WHERE id = ${userId}
