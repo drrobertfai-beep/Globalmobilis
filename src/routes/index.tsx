@@ -50,6 +50,7 @@ const features = [
     description:
       "Compare housing, utilities, groceries, and more across cities to budget your move with confidence.",
     accentColor: "#F47B53",
+    href: "/cost-of-living",
   },
   {
     icon: "💼",

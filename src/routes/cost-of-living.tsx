@@ -104,18 +104,25 @@ function CostOfLivingPage() {
     <div className="min-h-screen bg-gray-50 pb-24">
       <div className="mx-auto max-w-5xl px-4 pt-8">
         {/* Header */}
-        <header className="mb-6">
-          <h1 className="text-2xl font-bold text-brand-primary-900 sm:text-3xl">
-            🧮 Cost of Living Calculator
-          </h1>
-          <p className="mt-1 text-sm text-gray-600 sm:text-base">
-            Compare estimated monthly expenses between any two cities — rent,
-            utilities, groceries, transport and more across{" "}
-            <span className="font-semibold text-brand-primary-700">
-              {SEED_DESTINATIONS.length} destinations
-            </span>
-            .
-          </p>
+        <header className="mb-6 flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <h1 className="text-2xl font-bold text-brand-primary-900 sm:text-3xl">
+              🧮 Cost of Living Calculator
+            </h1>
+            <p className="mt-1 text-sm text-gray-600 sm:text-base">
+              Compare estimated monthly expenses between any two cities — rent,
+              utilities, groceries, transport and more across{" "}
+              <span className="font-semibold text-brand-primary-700">
+                {SEED_DESTINATIONS.length} destinations
+              </span>
+              .
+            </p>
+          </div>
+          <ShareButton
+            fromId={fromId}
+            toId={toId}
+            disabled={!fromDest || !toDest || sameCity}
+          />
         </header>
 
         {/* City pickers */}
@@ -189,7 +196,8 @@ function CostOfLivingPage() {
                   <p className="text-sm font-semibold text-green-700">
                     💚 Save {formatMoney(-result.difference)}/month (
                     {Math.abs(result.percentDiff).toFixed(0)}% less) living in{" "}
-                    {result.to.flag} {result.to.city} vs {result.from.city}
+                    {result.to.flag} {result.to.city} vs {result.from.flag}{" "}
+                    {result.from.city}
                   </p>
                   <p className="mt-0.5 text-xs text-green-600">
                     {formatMoney(result.from.total)}/mo →{" "}
@@ -202,7 +210,7 @@ function CostOfLivingPage() {
                     🔴 {result.to.flag} {result.to.city} is{" "}
                     {formatMoney(result.difference)}/month (
                     {result.percentDiff.toFixed(0)}%) more expensive than{" "}
-                    {result.from.city}
+                    {result.from.flag} {result.from.city}
                   </p>
                   <p className="mt-0.5 text-xs text-red-600">
                     {formatMoney(result.from.total)}/mo →{" "}
@@ -292,6 +300,43 @@ function CostOfLivingPage() {
 
       <BottomNav currentTab="explore" />
     </div>
+  );
+}
+
+function ShareButton({
+  fromId,
+  toId,
+  disabled,
+}: {
+  fromId: string;
+  toId: string;
+  disabled: boolean;
+}) {
+  const [copied, setCopied] = useState(false);
+  const share = async () => {
+    const url = `${window.location.origin}/cost-of-living?from=${encodeURIComponent(fromId)}&to=${encodeURIComponent(toId)}`;
+    try {
+      await navigator.clipboard.writeText(url);
+    } catch {
+      const ta = document.createElement("textarea");
+      ta.value = url;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      ta.remove();
+    }
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 2000);
+  };
+  return (
+    <button
+      onClick={share}
+      disabled={disabled}
+      title="Copy a link to this comparison"
+      className="rounded-xl border border-brand-primary-100 bg-brand-primary-50 px-3.5 py-2 text-sm font-semibold text-brand-primary-700 transition hover:bg-brand-primary-100 disabled:cursor-not-allowed disabled:opacity-50"
+    >
+      {copied ? "✓ Link copied" : "🔗 Share"}
+    </button>
   );
 }
 

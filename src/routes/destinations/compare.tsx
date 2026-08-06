@@ -275,6 +275,24 @@ function CompareDestinationsContent() {
               })}
             </div>
           </div>
+          {/* Cross-link to the interactive cost-of-living calculator */}
+          <Link
+            to="/cost-of-living"
+            className="mt-4 flex items-center justify-between gap-3 rounded-2xl border border-brand-primary-100 bg-brand-primary-50/60 px-5 py-4 transition hover:bg-brand-primary-100/70"
+          >
+            <div>
+              <p className="text-sm font-bold text-brand-primary-900">
+                🧮 Want a full monthly budget breakdown?
+              </p>
+              <p className="mt-0.5 text-xs text-gray-600">
+                Use the interactive Cost of Living Calculator — pick two cities,
+                adjust spending by category, and see exact monthly totals.
+              </p>
+            </div>
+            <span className="shrink-0 text-sm font-semibold text-brand-primary-700">
+              Open calculator →
+            </span>
+          </Link>
         </div>
       ) : (
         <div className="mx-auto max-w-6xl px-4 py-16 text-center sm:px-6">
