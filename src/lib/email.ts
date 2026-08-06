@@ -49,6 +49,7 @@ async function sendViaKnock(to: string, subject: string, body: string): Promise<
       },
       body: JSON.stringify({
         key: workflowKey,
+        name: "Send email",
         // Inline-identify the recipient so the email channel has an address.
         recipients: [{ id: `email:${to}`, email: to, name: to.split("@")[0] }],
         actor: "global-mobilis",
