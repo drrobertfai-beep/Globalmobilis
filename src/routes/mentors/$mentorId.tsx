@@ -39,7 +39,10 @@ function MentorProfilePage() {
     let cancelled = false;
     const gfd = new FormData();
     gfd.set("mentorId", mentorId);
-    getMentor(gfd)
+    // POST server fn: FormData args need the { data: fd } wrapper — raw fn(fd)
+    // sends an EMPTY body, so getMentor returns null and every profile showed
+    // "Mentor not found.".
+    getMentor({ data: gfd })
       .then((result) => {
         if (cancelled) return;
         if (!result) {
@@ -66,7 +69,9 @@ function MentorProfilePage() {
     const bfd = new FormData();
     bfd.set("mentorId", mentor.id);
     bfd.set("slot", selectedSlot);
-    const result = await bookSession(bfd);
+    // Same wrapper requirement as getMentor — raw fn(fd) would send an empty
+    // body and booking would always fail with "Mentor and time slot are required.".
+    const result = await bookSession({ data: bfd });
     setBookingInProgress(false);
     if (result.success && result.booking) {
       setBooking(result.booking);
@@ -164,6 +169,23 @@ function MentorProfilePage() {
           </div>
         </div>
 
+        {/* Intro video (if the mentor has one) */}
+        {mentor.videoIntroUrl && (
+          <div className="card mt-4 p-6">
+            <h2 className="mb-3 font-bold text-neutral-800">Intro video 🎬</h2>
+            <div className="overflow-hidden rounded-xl bg-black">
+              <video
+                src={mentor.videoIntroUrl}
+                controls
+                playsInline
+                preload="metadata"
+                className="aspect-video w-full"
+              >
+                Your browser doesn't support embedded video.
+              </video>
+            </div>
+          </div>
+        )}
         {/* Booking */}
         {!booking ? (
           <div className="card mt-4 p-6">

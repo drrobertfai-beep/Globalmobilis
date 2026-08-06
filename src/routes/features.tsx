@@ -57,7 +57,8 @@ const featureGroups = [
         icon: "👤",
         title: "Mentorship Matching",
         description:
-          "Get paired with experienced expats who can guide you through your relocation journey.",
+          "Browse verified local experts and book a 1:1 video consultation before you arrive.",
+        href: "/mentors",
         accentColor: "#0E4F8B",
       },
       {
