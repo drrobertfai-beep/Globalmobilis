@@ -8,6 +8,7 @@ const navLinks = [
   { href: "/destinations/compare", label: "Compare" },
   { href: "/premium", label: "Premium" },
   { href: "/media", label: "Media" },
+  { href: "/community", label: "Community" },
   { href: "/dashboard", label: "Dashboard" },
 ];
 
