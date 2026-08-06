@@ -79,6 +79,7 @@ const featureGroups = [
         title: "Smart Messaging",
         description:
           "Chat with community members with built-in real-time translation across 28 languages.",
+        href: "/messages",
         accentColor: "#0FA3A3",
       },
       {
