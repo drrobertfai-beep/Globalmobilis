@@ -27,7 +27,8 @@ fi
 
 echo "✓ Database initialized successfully!"
 echo "   Tables: users, waitlist, destinations, communities, community_members,"
-echo "   messages, events, event_attendees, destination_reviews, mentorship_connections"
+echo "   messages, events, event_attendees, destination_reviews, mentorship_connections,"
+echo "   password_reset_tokens"
 echo "   Destinations seeded: 18 cities across 14 countries"
 echo ""
 echo "   Next steps:"

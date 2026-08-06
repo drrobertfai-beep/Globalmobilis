@@ -347,6 +347,9 @@ export const logOut = createServerFn({ method: "POST" }).handler(async () => {
 // Password Reset
 // =============================================================================
 
+// In-memory fallback for local dev WITHOUT DATABASE_URL. Production uses the
+// `password_reset_tokens` table so tokens survive serverless cold starts and
+// are shared across instances.
 const resetTokens = new Map<string, { email: string; expiresAt: number }>();
 
 const RESET_TOKEN_EXPIRY = 60 * 60 * 1000; // 1 hour
@@ -356,6 +359,55 @@ function generateResetToken(): string {
   let token = "";
   for (let i = 0; i < 48; i++) token += chars.charAt(Math.floor(Math.random() * chars.length));
   return token;
+}
+
+async function dbResetTokenSql() {
+  if (!process.env.DATABASE_URL) return null;
+  const { neon } = await import("@neondatabase/serverless");
+  return neon(normalizeDbUrl(process.env.DATABASE_URL));
+}
+
+async function saveResetToken(token: string, email: string, expiresAt: number): Promise<void> {
+  const sql = await dbResetTokenSql();
+  if (sql) {
+    await sql`INSERT INTO password_reset_tokens (token, email, expires_at)
+              VALUES (${token}, ${email}, ${new Date(expiresAt).toISOString()})
+              ON CONFLICT (token) DO UPDATE SET email = EXCLUDED.email, expires_at = EXCLUDED.expires_at`;
+  } else {
+    resetTokens.set(token, { email, expiresAt });
+  }
+}
+
+async function getResetToken(
+  token: string,
+): Promise<{ email: string; expiresAt: number } | null> {
+  const sql = await dbResetTokenSql();
+  if (sql) {
+    const rows = await sql`SELECT email, expires_at FROM password_reset_tokens WHERE token = ${token}`;
+    if (rows.length === 0) return null;
+    return { email: rows[0].email as string, expiresAt: new Date(rows[0].expires_at as string).getTime() };
+  }
+  return resetTokens.get(token) ?? null;
+}
+
+async function deleteResetToken(token: string): Promise<void> {
+  const sql = await dbResetTokenSql();
+  if (sql) {
+    await sql`DELETE FROM password_reset_tokens WHERE token = ${token}`;
+  } else {
+    resetTokens.delete(token);
+  }
+}
+
+async function deleteExpiredResetTokens(): Promise<void> {
+  const sql = await dbResetTokenSql();
+  if (sql) {
+    await sql`DELETE FROM password_reset_tokens WHERE expires_at < now()`;
+  } else {
+    for (const [key, val] of resetTokens) {
+      if (val.expiresAt < Date.now()) resetTokens.delete(key);
+    }
+  }
 }
 
 export const requestPasswordReset = createServerFn({ method: "POST" }).handler(
@@ -381,15 +433,10 @@ export const requestPasswordReset = createServerFn({ method: "POST" }).handler(
 
       // Generate token even if user doesn't exist (prevents email enumeration)
       const token = generateResetToken();
-      resetTokens.set(token, {
-        email: email.toLowerCase(),
-        expiresAt: Date.now() + RESET_TOKEN_EXPIRY,
-      });
+      await saveResetToken(token, email.toLowerCase(), Date.now() + RESET_TOKEN_EXPIRY);
 
       // Clean expired tokens
-      for (const [key, val] of resetTokens) {
-        if (val.expiresAt < Date.now()) resetTokens.delete(key);
-      }
+      await deleteExpiredResetTokens();
 
       if (!userExists) {
         // Return success anyway to not leak user existence
@@ -397,7 +444,7 @@ export const requestPasswordReset = createServerFn({ method: "POST" }).handler(
       }
 
       // Send the reset email
-      const resetLink = `${process.env.APP_URL || "https://globalmobilis.vercel.app"}/reset-password?token=${token}`;
+      const resetLink = `${process.env.APP_URL || "https://globalmobilis.com"}/reset-password?token=${token}`;
       const resetEmail = passwordResetEmail(resetLink);
       sendEmail({ ...resetEmail, to: email.toLowerCase() }).catch((err) => {
         console.error("Failed to send password reset email:", err);
@@ -430,9 +477,9 @@ export const resetPassword = createServerFn({ method: "POST" }).handler(
     }
 
     try {
-      const stored = resetTokens.get(token);
+      const stored = await getResetToken(token);
       if (!stored || stored.expiresAt < Date.now()) {
-        resetTokens.delete(token);
+        await deleteResetToken(token);
         return { success: false, error: "This reset link has expired. Please request a new one." };
       }
 
@@ -451,7 +498,7 @@ export const resetPassword = createServerFn({ method: "POST" }).handler(
         }
       }
 
-      resetTokens.delete(token);
+      await deleteResetToken(token);
       return { success: true, message: "Password has been reset. You can now log in." };
     } catch (err) {
       console.error("Password reset error:", err);
