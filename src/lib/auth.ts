@@ -263,11 +263,12 @@ export const signUp = createServerFn({ method: "POST" }).handler(
       }
       return { success: true, session, cookie: createSessionCookie(token) };
     } catch (err) {
-      console.error("Signup error:", err);
-      return { success: false, error: "Something went wrong. Please try again." };
+      const msg = err instanceof Error ? err.message : String(err);
+      console.error("Signup error:", msg);
+      return { success: false, error: `Something went wrong: ${msg}` };
     }
-  },
-);
+    },
+    );
 
 // =============================================================================
 // Log In
