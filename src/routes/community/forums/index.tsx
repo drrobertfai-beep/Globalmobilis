@@ -11,7 +11,7 @@ import {
 } from "~/lib/forums";
 import { BottomNav } from "~/components/BottomNav";
 
-export const Route = createFileRoute("/community/forums")({
+export const Route = createFileRoute("/community/forums/")({
   head: () => ({
     meta: [
       { title: "Expat Forums — Global Mobilis" },
@@ -223,6 +223,7 @@ function ForumsPage() {
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState("All");
   const [sort, setSort] = useState<"recent" | "upvoted">("recent");
+  const [search, setSearch] = useState("");
   const [showNewThread, setShowNewThread] = useState(false);
   const [busy, setBusy] = useState<Record<string, boolean>>({});
 
@@ -247,13 +248,22 @@ function ForumsPage() {
 
   const visibleThreads = useMemo(() => {
     const threads = data?.threads ?? [];
-    const sorted = [...threads].sort((a, b) => {
+    const q = search.trim().toLowerCase();
+    const filtered = q
+      ? threads.filter((t) => {
+          const haystack = [t.title, t.body, ...(t.tags ?? [])]
+            .join(" ")
+            .toLowerCase();
+          return haystack.includes(q);
+        })
+      : threads;
+    const sorted = [...filtered].sort((a, b) => {
       if (a.pinned !== b.pinned) return a.pinned ? -1 : 1;
       if (sort === "upvoted") return b.upvotes - a.upvotes;
       return b.createdAt.localeCompare(a.createdAt);
     });
     return sorted;
-  }, [data, sort]);
+  }, [data, sort, search]);
 
   const requireLogin = (): boolean => {
     if (currentUser) return true;
@@ -357,6 +367,38 @@ function ForumsPage() {
               </button>
             ))}
           </div>
+
+          {/* Search */}
+          <div className="relative mb-2">
+            <svg
+              viewBox="0 0 24 24"
+              className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 stroke-neutral-400"
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              fill="none"
+            >
+              <circle cx="11" cy="11" r="7" />
+              <path d="m20 20-3.5-3.5" />
+            </svg>
+            <input
+              type="search"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search threads by title, question or tag…"
+              aria-label="Search threads"
+              className="w-full rounded-xl border border-neutral-200 bg-neutral-50 py-2 pl-9 pr-9 text-sm text-neutral-700 outline-none transition-colors placeholder:text-neutral-400 focus:border-brand-secondary-500 focus:bg-white"
+            />
+            {search && (
+              <button
+                onClick={() => setSearch("")}
+                aria-label="Clear search"
+                className="absolute right-2 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-600"
+              >
+                ✕
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
@@ -370,19 +412,30 @@ function ForumsPage() {
         <div className="mx-auto max-w-6xl space-y-3 px-4 py-6 sm:px-6">
           {visibleThreads.length === 0 ? (
             <div className="card flex flex-col items-center gap-2 p-8 text-center">
-              <span className="text-3xl">💬</span>
+              <span className="text-3xl">{search.trim() ? "🔍" : "💬"}</span>
               <p className="text-sm font-medium text-neutral-600">
-                No threads in this category yet — start the conversation!
+                {search.trim()
+                  ? `No threads match "${search.trim()}". Try a different search.`
+                  : "No threads in this category yet — start the conversation!"}
               </p>
-              <button
-                onClick={() => {
-                  if (!requireLogin()) return;
-                  setShowNewThread(true);
-                }}
-                className="mt-1 rounded-full bg-brand-primary-700 px-4 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-brand-primary-500"
-              >
-                + Start a thread
-              </button>
+              {search.trim() ? (
+                <button
+                  onClick={() => setSearch("")}
+                  className="mt-1 rounded-full border border-neutral-200 px-4 py-1.5 text-xs font-medium text-neutral-500 transition-colors hover:border-neutral-300 hover:text-neutral-700"
+                >
+                  Clear search
+                </button>
+              ) : (
+                <button
+                  onClick={() => {
+                    if (!requireLogin()) return;
+                    setShowNewThread(true);
+                  }}
+                  className="mt-1 rounded-full bg-brand-primary-700 px-4 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-brand-primary-500"
+                >
+                  + Start a thread
+                </button>
+              )}
             </div>
           ) : (
             visibleThreads.map((thread) => (
