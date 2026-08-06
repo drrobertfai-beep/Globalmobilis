@@ -265,6 +265,12 @@ function PremiumPage() {
           ))}
         </div>
 
+        {/* Points-for-premium callout */}
+        <div className="mt-6 rounded-2xl border border-[#F4B860]/40 bg-gradient-to-r from-[#FFF8ED] to-[#FFF3DC] px-6 py-5 text-center">
+          <p className="text-sm leading-relaxed text-gray-700">
+            <span className="font-bold">Earn points</span> through community participation and redeem them for premium access. <span className="font-semibold">500 pts = 1 month, 4,000 pts = 1 year.</span> <Link to="/rewards" className="font-semibold text-[#0E4F8B] underline underline-offset-2 transition-colors hover:text-[#1B7A9B]">Visit the Rewards page to redeem</Link>.
+          </p>
+        </div>
         {/* Free tier comparison */}
         <section className="mt-16">
           <h2 className="mb-6 text-center text-xl font-bold text-neutral-700">
