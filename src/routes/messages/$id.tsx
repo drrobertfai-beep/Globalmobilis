@@ -6,57 +6,16 @@ import {
   type MessageView,
   type ThreadView,
 } from "~/lib/messages";
+import {
+  LANG_STORAGE_KEY,
+  langName,
+  readStoredLang,
+  SUPPORTED_LANGS as TRANSLATE_LANGS,
+} from "~/lib/translate";
 
 export const Route = createFileRoute("/messages/$id")({
   component: MessageThreadPage,
 });
-
-// =============================================================================
-// On-demand translation (client side, cached per message + target language)
-// =============================================================================
-const TRANSLATE_LANGS = [
-  { code: "en", label: "EN", name: "English" },
-  { code: "es", label: "ES", name: "Spanish" },
-  { code: "fr", label: "FR", name: "French" },
-  { code: "de", label: "DE", name: "German" },
-  { code: "pt", label: "PT", name: "Portuguese" },
-  { code: "ar", label: "AR", name: "Arabic" },
-  { code: "zh-CN", label: "ZH", name: "Chinese" },
-  { code: "ja", label: "JA", name: "Japanese" },
-];
-const LANG_STORAGE_KEY = "gm_translate_lang";
-
-function langName(code: string): string {
-  const base = code.toLowerCase().split("-")[0];
-  const hit = TRANSLATE_LANGS.find(
-    (l) =>
-      l.code.toLowerCase() === code.toLowerCase() ||
-      l.code.toLowerCase().startsWith(base),
-  );
-  return hit?.name ?? code;
-}
-
-function detectDefaultLang(): string {
-  try {
-    const navLang = (typeof navigator !== "undefined" && navigator.language) || "";
-    const base = navLang.split("-")[0].toLowerCase();
-    const hit = TRANSLATE_LANGS.find((l) => l.code.toLowerCase().startsWith(base));
-    if (hit) return hit.code;
-  } catch {
-    /* ignore */
-  }
-  return "en";
-}
-
-function readStoredLang(): string {
-  try {
-    const stored = localStorage.getItem(LANG_STORAGE_KEY);
-    if (stored && TRANSLATE_LANGS.some((l) => l.code === stored)) return stored;
-  } catch {
-    /* ignore */
-  }
-  return detectDefaultLang();
-}
 
 interface TranslationEntry {
   translatedText: string;

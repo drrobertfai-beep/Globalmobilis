@@ -41,8 +41,9 @@ const features = [
     icon: "💬",
     title: "Seamless Translation",
     description:
-      "Built-in messaging and calling with real-time translation — communicate across languages without barriers.",
+      "Translate text instantly across 28 languages — try it now, or tap 🌐 on any message in your chats.",
     accentColor: "#F4B860",
+    href: "/translate",
   },
   {
     icon: "🏠",

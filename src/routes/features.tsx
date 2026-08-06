@@ -77,8 +77,16 @@ const featureGroups = [
         icon: "💬",
         title: "Smart Messaging",
         description:
-          "Chat with community members with built-in real-time translation in 50+ languages.",
+          "Chat with community members with built-in real-time translation across 28 languages.",
         accentColor: "#0FA3A3",
+      },
+      {
+        icon: "🌐",
+        title: "Real-Time Translation",
+        description:
+          "Translate text instantly into 28 languages with automatic source detection — try it free, no sign-up needed.",
+        accentColor: "#F4B860",
+        href: "/translate",
       },
       {
         icon: "📞",
