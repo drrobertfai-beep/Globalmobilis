@@ -32,7 +32,9 @@ function MentorsPage() {
     setError("");
     const fd = new FormData();
     if (city !== "All") fd.set("city", city);
-    listMentors(city === "All" ? undefined : fd)
+    // POST server fn: FormData args must go through the { data: fd } wrapper,
+    // otherwise the RPC client sends an empty body and the city filter is lost.
+    listMentors({ data: fd })
       .then((result) => {
         if (!cancelled) setMentors(result as unknown as MentorCardView[]);
       })
