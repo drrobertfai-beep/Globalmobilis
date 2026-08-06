@@ -2,7 +2,12 @@
  * Global Mobilis — Transactional Email
  *
  * Sends welcome emails, password resets, and notifications.
- * Uses the team's cto.email inbox as the sending transport.
+ * Primary transport: Knock (https://knock.app) — POST /v1/notify, works from
+ * Vercel serverless. Requires KNOCK_API_KEY (+ KNOCK_WORKFLOW_KEY, default
+ * "global-mobilis-email"); the Knock workflow must contain an email channel
+ * step that renders {{ data.subject }} / {{{ data.html }}} and has an SMTP
+ * provider connected in the Knock dashboard.
+ * Fallback transport: the team's cto.email inbox (api.ctomail.io).
  * Emails are also logged to data/email-log.json for audit.
  */
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
@@ -27,7 +32,43 @@ function logEmail(entry: Record<string, unknown>) {
   writeFileSync(EMAIL_LOG, JSON.stringify(log, null, 2));
 }
 
+// Knock — primary provider (works from Vercel serverless). See header comment.
+async function sendViaKnock(to: string, subject: string, body: string): Promise<boolean> {
+  const apiKey = process.env.KNOCK_API_KEY;
+  if (!apiKey) {
+    console.log("[Email] KNOCK_API_KEY not set — using fallback transport");
+    return false;
+  }
+  const workflowKey = process.env.KNOCK_WORKFLOW_KEY || "global-mobilis-email";
+  try {
+    const res = await fetch("https://api.knock.app/v1/notify", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: workflowKey,
+        // Inline-identify the recipient so the email channel has an address.
+        recipients: [{ id: `email:${to}`, email: to, name: to.split("@")[0] }],
+        actor: "global-mobilis",
+        data: { subject, html: body },
+      }),
+    });
+    if (!res.ok) {
+      const detail = await res.text().catch(() => "");
+      console.error(`[Email] Knock API returned ${res.status} for "${subject}" → ${to}: ${detail.slice(0, 300)}`);
+      return false;
+    }
+    return true;
+  } catch (err) {
+    console.error(`[Email] Knock API request failed for "${subject}" → ${to}:`, err);
+    return false;
+  }
+}
 async function sendViaAPI(to: string, subject: string, body: string): Promise<boolean> {
+  // Try Knock first; fall back to the legacy ctomail transport.
+  if (await sendViaKnock(to, subject, body)) return true;
   try {
     const res = await fetch("https://api.ctomail.io/v1/send", {
       method: "POST",
