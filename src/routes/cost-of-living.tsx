@@ -189,7 +189,8 @@ function CostOfLivingPage() {
                   <p className="text-sm font-semibold text-green-700">
                     💚 Save {formatMoney(-result.difference)}/month (
                     {Math.abs(result.percentDiff).toFixed(0)}% less) living in{" "}
-                    {result.to.flag} {result.to.city} vs {result.from.city}
+                    {result.to.flag} {result.to.city} vs {result.from.flag}{" "}
+                    {result.from.city}
                   </p>
                   <p className="mt-0.5 text-xs text-green-600">
                     {formatMoney(result.from.total)}/mo →{" "}
@@ -202,7 +203,7 @@ function CostOfLivingPage() {
                     🔴 {result.to.flag} {result.to.city} is{" "}
                     {formatMoney(result.difference)}/month (
                     {result.percentDiff.toFixed(0)}%) more expensive than{" "}
-                    {result.from.city}
+                    {result.from.flag} {result.from.city}
                   </p>
                   <p className="mt-0.5 text-xs text-red-600">
                     {formatMoney(result.from.total)}/mo →{" "}

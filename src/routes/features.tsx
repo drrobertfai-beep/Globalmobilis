@@ -23,6 +23,7 @@ const featureGroups = [
         description:
           "Compare expenses across cities — rent, groceries, utilities, transport, and entertainment.",
         accentColor: "#0FA3A3",
+        href: "/cost-of-living",
       },
       {
         icon: "🏫",
