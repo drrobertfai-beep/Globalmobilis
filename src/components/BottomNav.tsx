@@ -47,6 +47,7 @@ export function BottomNav({ currentTab }: { currentTab: BottomTab }) {
       ? { id: "premium", icon: "⭐", label: "Premium", href: "/premium" }
       : { id: "timeline", icon: "📋", label: "Timeline", href: "/timeline" },
     { id: "connect", icon: "👥", label: "Connect", href: "/community" },
+    { id: "messages", icon: "💬", label: "Messages", href: "/messages" },
     { id: "profile", icon: "👤", label: "Profile", href: "/profile" },
   ];
 

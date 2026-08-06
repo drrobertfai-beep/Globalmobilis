@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { BottomNav } from "~/components/BottomNav";
 import { getMyPoints, type UserPoints } from "~/lib/points";
 import { getMyRedemptions, REWARDS, type Reward, type UserRedemption } from "~/lib/redemption";
-export const Route = createFileRoute("/profile")({
+export const Route = createFileRoute("/profile/")({
   component: ProfilePage,
 });
 

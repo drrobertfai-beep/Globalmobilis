@@ -19,6 +19,13 @@ interface PublicProfile {
   journey: { city: string; country: string; flag: string; year: string; color: string; desc: string }[];
 }
 
+/** Maps public profile ids to their seeded conversation ids (messages/data
+ * conversations.json). Profiles without an entry fall back to the community
+ * directory instead of a dead "Message" link. */
+const CONVERSATION_BY_PROFILE: Record<string, string> = {
+  "ana-silva": "c_ana",
+  "marcus-chen": "c_marcus",
+};
 const mockProfiles: Record<string, PublicProfile> = {
   "ana-silva": {
     id: "ana-silva", name: "Ana Silva", username: "@anasilva", avatar: "AS", color: "bg-brand-coral-500",
@@ -91,15 +98,22 @@ function PublicProfilePage() {
           </p>
         </div>
 
-        {/* Message button */}
+        {/* Message button — link to the member's existing conversation; the
+            /messages/new route doesn't exist and previously dead-ended. */}
         <div className="mt-4">
-          <Link
-            to="/messages/$id"
-            params={{ id: "new" }}
-            className="btn-primary w-full"
-          >
-            Message {profile.name.split(" ")[0]}
-          </Link>
+          {CONVERSATION_BY_PROFILE[profile.id] ? (
+            <Link
+              to="/messages/$id"
+              params={{ id: CONVERSATION_BY_PROFILE[profile.id] }}
+              className="btn-primary w-full"
+            >
+              Message {profile.name.split(" ")[0]}
+            </Link>
+          ) : (
+            <Link to="/community" className="btn-primary w-full">
+              Find {profile.name.split(" ")[0]} in Community
+            </Link>
+          )}
         </div>
 
         {/* Stats */}

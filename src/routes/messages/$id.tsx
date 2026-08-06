@@ -162,7 +162,11 @@ function MessageThreadPage() {
   };
 
   const load = async () => {
-    const result = (await getMessages({ conversationId: id })) as unknown;
+    const gfd = new FormData();
+    gfd.set("conversationId", id);
+    // POST server fn: FormData args need the { data: fd } wrapper (see skill
+    // tanstack-serverfn-formdata-calls) — raw fn(fd) would send an empty body.
+    const result = (await getMessages({ data: gfd })) as unknown;
     if (result && typeof result === "object" && "error" in result) {
       setError((result as { error: string }).error);
       return;
@@ -210,13 +214,24 @@ function MessageThreadPage() {
   };
 
   if (error && !thread) {
+    const needsLogin = error.toLowerCase().includes("signed in");
     return (
       <div className="mx-auto flex min-h-[50vh] max-w-md items-center px-4 py-16">
         <div className="card w-full p-8 text-center">
           <p className="mb-3 text-sm text-neutral-500">{error}</p>
-          <Link to="/messages" className="text-sm font-medium text-brand-primary-700 hover:underline">
-            Back to messages
-          </Link>
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            {needsLogin && (
+              <Link
+                to="/login"
+                className="rounded-full bg-brand-primary-700 px-5 py-2 text-sm font-semibold text-white hover:bg-brand-primary-500"
+              >
+                Sign in →
+              </Link>
+            )}
+            <Link to="/messages" className="text-sm font-medium text-brand-primary-700 hover:underline">
+              Back to messages
+            </Link>
+          </div>
         </div>
       </div>
     );

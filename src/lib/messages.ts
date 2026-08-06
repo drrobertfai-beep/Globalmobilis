@@ -246,9 +246,9 @@ export const getMessages = createServerFn({ method: "POST" }).handler(
 
     // TanStack Start wraps a single non-FormData arg as { data: <arg> };
     // unwrap like sendMessage does (see getStrField in forums.ts).
-    const raw = (data ?? {}) as Record<string, unknown>;
-    const inner = raw.data && typeof raw.data === "object" ? (raw.data as Record<string, unknown>) : raw;
-    const conversationId = typeof inner.conversationId === "string" ? inner.conversationId : undefined;
+    // Accept any RPC payload form (plain { conversationId }, { data: fd } with
+    // FormData, etc.) via the same reader sendMessage uses.
+    const conversationId = getStrField(data, "conversationId");
     if (!conversationId) return { error: "Conversation is required." };
 
     const conversations = readConversations();
