@@ -26,6 +26,14 @@ const featureGroups = [
         href: "/cost-of-living",
       },
       {
+        icon: "🛂",
+        title: "Visa Step-by-Step Guides",
+        description:
+          "Application guides for Toronto, Berlin, Dubai, Lisbon, London and Sydney — document checklists, timelines, costs and official government links.",
+        accentColor: "#F47B53",
+        href: "/visa-guides",
+      },
+      {
         icon: "🏫",
         title: "Education Hub",
         description:

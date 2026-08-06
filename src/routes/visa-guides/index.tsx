@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { BottomNav } from "~/components/BottomNav";
-import { DIFFICULTY_LABELS, DIFFICULTY_STYLES, VISA_GUIDES } from "~/lib/visa-guides";
+import { DifficultyBadge } from "~/components/DifficultyBadge";
+import { VISA_GUIDES } from "~/lib/visa-guides";
 
 export const Route = createFileRoute("/visa-guides/")({
   head: () => ({
@@ -30,20 +31,13 @@ const FILTERS = [
   { key: "6", label: "🇦🇺 Sydney" },
 ] as const;
 
-function DifficultyBadge({ difficulty }: { difficulty: "easy" | "moderate" | "hard" }) {
-  return (
-    <span
-      className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-xs font-semibold ${DIFFICULTY_STYLES[difficulty]}`}
-    >
-      {difficulty === "easy" ? "●" : difficulty === "moderate" ? "◐" : "●"}
-      {DIFFICULTY_LABELS[difficulty]}
-    </span>
-  );
-}
-
 function VisaGuidesPage() {
   const [filter, setFilter] = useState<string>("all");
-  const guides = filter === "all" ? VISA_GUIDES : VISA_GUIDES.filter((g) => g.destinationId === filter);
+  // Destination-specific guides; the general guide (destinationId "") is rendered
+  // separately below so it only ever appears once.
+  const guides = VISA_GUIDES.filter(
+    (g) => g.destinationId !== "" && (filter === "all" || g.destinationId === filter)
+  );
   const general = VISA_GUIDES.filter((g) => g.destinationId === "");
 
   return (
@@ -136,6 +130,12 @@ function VisaGuidesPage() {
                 <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-xs text-gray-500">
                   <span className="inline-flex items-center gap-1">
                     <span className="text-gray-400">🧾</span> {g.steps.length} steps
+                  </span>
+                  <span className="inline-flex items-center gap-1">
+                    <span className="text-gray-400">⏱️</span> {g.totalTimeframe}
+                  </span>
+                  <span className="inline-flex items-center gap-1">
+                    <span className="text-gray-400">💰</span> {g.totalCost}
                   </span>
                   <span className="ml-auto inline-flex items-center gap-1 font-medium text-brand-primary-500">
                     Open guide →
