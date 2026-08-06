@@ -1,13 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { BottomNav } from "~/components/BottomNav";
-import {
-  checklistStorageKey,
-  DIFFICULTY_LABELS,
-  DIFFICULTY_STYLES,
-  VISA_GUIDES,
-  type VisaStep,
-} from "~/lib/visa-guides";
+import { DifficultyBadge } from "~/components/DifficultyBadge";
+import { checklistStorageKey, VISA_GUIDES, type VisaStep } from "~/lib/visa-guides";
 
 export const Route = createFileRoute("/visa-guides/$guideId")({
   loader: ({ params }) => ({
@@ -26,6 +21,17 @@ export const Route = createFileRoute("/visa-guides/$guideId")({
             ? `Step-by-step ${g.visaType} guide for ${g.city}, ${g.country}: ${g.steps.length} steps, ${g.totalTimeframe}, ${g.totalCost}. Document checklist, timelines and official links.`
             : "Visa step-by-step guide with document checklists, timelines and costs.",
         },
+        {
+          property: "og:title",
+          content: g ? `${g.visaType} — ${g.city} Visa Guide | Global Mobilis` : "Visa Guide — Global Mobilis",
+        },
+        {
+          property: "og:description",
+          content: g
+            ? `Step-by-step ${g.visaType} guide for ${g.city}, ${g.country}: document checklists, timelines, costs and official links.`
+            : "Visa step-by-step guide with document checklists, timelines and costs.",
+        },
+        { property: "og:type", content: "article" },
       ],
     };
   },
@@ -48,15 +54,6 @@ function ExternalLink({ href, children }: { href: string; children: React.ReactN
   );
 }
 
-function DifficultyBadge({ difficulty }: { difficulty: "easy" | "moderate" | "hard" }) {
-  return (
-    <span
-      className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-xs font-semibold ${DIFFICULTY_STYLES[difficulty]}`}
-    >
-      {DIFFICULTY_LABELS[difficulty]}
-    </span>
-  );
-}
 
 /** Collect every document across all steps into an ordered, de-duplicated list. */
 function allDocuments(guide: { steps: VisaStep[] }): { stepIndex: number; doc: string }[] {
@@ -197,6 +194,7 @@ function VisaGuideDetailPage() {
                   onClick={() => toggleStep(s.stepNumber)}
                   className="flex w-full items-start gap-3 p-4 text-left"
                   aria-expanded={open}
+                  aria-controls={`step-panel-${s.stepNumber}`}
                 >
                   <span className="relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-primary-500 text-sm font-bold text-white shadow-sm">
                     {s.stepNumber}
@@ -213,7 +211,7 @@ function VisaGuideDetailPage() {
                   </div>
                 </button>
                 {open && (
-                  <div className="px-4 pb-4 pl-[52px]">
+                  <div id={`step-panel-${s.stepNumber}`} className="px-4 pb-4 pl-[52px]">
                     <p className="mb-3 text-sm leading-relaxed text-gray-600">{s.description}</p>
                     <div className="mb-3">
                       <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-gray-400">
@@ -268,7 +266,7 @@ function VisaGuideDetailPage() {
           </div>
 
           <ul className="space-y-1">
-            {docs.map(({ stepIndex, doc }) => {
+            {(expandedDocs ? docs : docs.slice(0, 6)).map(({ stepIndex, doc }) => {
               const isChecked = !!checked[doc];
               return (
                 <li key={doc}>

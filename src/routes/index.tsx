@@ -63,8 +63,9 @@ const features = [
     icon: "🎓",
     title: "Education Pathways",
     description:
-      "Research universities, visa requirements, and scholarship opportunities for students worldwide.",
+      "Step-by-step visa guides with document checklists, timelines, and costs — plus university research and scholarship pathways for students worldwide.",
     accentColor: "#0E4F8B",
+    href: "/visa-guides",
   },
 ];
 
