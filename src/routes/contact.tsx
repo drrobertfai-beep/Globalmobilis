@@ -109,16 +109,13 @@ function ContactPage() {
                   href: "mailto:hello@globalmobilis.com",
                 },
                 {
-                  icon: "🐦",
-                  label: "Twitter / X",
-                  value: "@globalmobilis",
-                  href: "https://x.com/globalmobilis",
-                },
-                {
-                  icon: "💼",
-                  label: "LinkedIn",
-                  value: "Global Mobilis",
-                  href: "https://linkedin.com/company/globalmobilis",
+                  // These two entries used to point at x.com/globalmobilis and
+                  // linkedin.com/company/globalmobilis. Both return 404 — the
+                  // accounts do not exist — so we link to nothing until they do.
+                  icon: "📣",
+                  label: "X and LinkedIn",
+                  value: "Being set up — email us in the meantime",
+                  href: "mailto:hello@globalmobilis.com?subject=Global%20Mobilis",
                 },
               ].map((item) => (
                 <div key={item.label} className="flex items-start gap-3">
