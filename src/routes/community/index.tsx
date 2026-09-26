@@ -540,6 +540,35 @@ function CommunityPage() {
         </div>
       ) : (
         <div className="mx-auto max-w-6xl space-y-8 px-4 py-6 sm:px-6">
+          {/* A newcomer arriving here used to see empty tabs and no
+              explanation, which reads as a broken page. The community really
+              is new, so say so. This disappears the moment anything exists. */}
+          {yourGroups.length === 0 &&
+            visibleGroups.length === 0 &&
+            recentThreads.length === 0 &&
+            (data?.events ?? []).length === 0 && (
+              <div className="card border border-brand-secondary-500/20 bg-[#F0FBFA] p-6 text-center">
+                <p className="text-lg font-bold text-neutral-700">
+                  The community is brand new
+                </p>
+                <p className="mx-auto mt-2 max-w-2xl text-sm text-neutral-500">
+                  There are no groups, forum threads or events here yet, because
+                  nobody has created one. Nothing on this page is simulated.{" "}
+                  {currentUser
+                    ? "Yours would be the first."
+                    : "Create an account and yours would be the first."}
+                </p>
+                {!currentUser && (
+                  <Link
+                    to="/signup"
+                    className="mt-3 inline-block rounded-full bg-brand-primary-700 px-5 py-2 text-sm font-semibold text-white hover:bg-brand-primary-500"
+                  >
+                    Create an account
+                  </Link>
+                )}
+              </div>
+            )}
+
           {/* Your Groups */}
           {(activeChip === "All" || activeChip === "Your Groups") && (
             <section>
