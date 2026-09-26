@@ -18,19 +18,13 @@ export interface StoredReview {
   created_at: string;
 }
 
-// Seed mock reviews for destinations
-export const SEED_REVIEWS: Record<string, StoredReview[]> = {
-  "1": [
-    { id: "r1", destination_id: "1", user_id: "u1", user_name: "Ana Silva", avatar_url: "", rating: 5, review_text: "Absolutely love Toronto! The multicultural vibe is unmatched. Great job opportunities in tech.", pros: ["Diverse culture", "Great food scene", "Strong job market"], cons: ["Expensive rent", "Cold winters"], image_url: "", video_url: "", created_at: "2026-03-15T10:30:00Z" },
-    { id: "r2", destination_id: "1", user_id: "u2", user_name: "Marcus Chen", avatar_url: "", rating: 4, review_text: "Moved here for work and it's been fantastic. The public transit could be better though.", pros: ["Job opportunities", "Multicultural"], cons: ["TTC delays", "High taxes"], image_url: "", video_url: "", created_at: "2026-02-20T14:00:00Z" },
-  ],
-  "3": [
-    { id: "r3", destination_id: "3", user_id: "u3", user_name: "Sarah Williams", avatar_url: "", rating: 5, review_text: "London is incredible! So much history, culture, and career opportunities.", pros: ["World-class museums", "Career growth", "Public transport"], cons: ["Very expensive", "Crowded"], image_url: "", video_url: "", created_at: "2026-01-10T09:00:00Z" },
-  ],
-  "5": [
-    { id: "r4", destination_id: "5", user_id: "u4", user_name: "Felix Müller", avatar_url: "", rating: 5, review_text: "Berlin is the best decision I ever made. Creative, affordable, and incredibly welcoming.", pros: ["Affordable", "Creative scene", "English-friendly"], cons: ["Bureaucracy", "Weather"], image_url: "", video_url: "", created_at: "2026-04-01T11:00:00Z" },
-  ],
-};
+// Reviews come only from real users. This map previously held four invented
+// reviews from invented people (Ana Silva, Marcus Chen, Sarah Williams,
+// Felix Müller), which the destination pages then displayed as a star rating
+// and an "average score". A fabricated review is worse than no review: it
+// tells someone weighing a move that a stranger vouched for a city when no
+// stranger did. Keep this empty until the review pipeline has real rows in it.
+export const SEED_REVIEWS: Record<string, StoredReview[]> = {};
 
 function getFileFallback(): StoredReview[] {
   try {
