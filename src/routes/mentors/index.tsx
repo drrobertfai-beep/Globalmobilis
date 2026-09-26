@@ -66,9 +66,9 @@ function MentorsPage() {
       {/* Header */}
       <div className="bg-white px-4 pb-3 pt-6 sm:px-6">
         <div className="mx-auto max-w-6xl">
-          <h1 className="text-2xl font-bold text-neutral-700">Mentors</h1>
+          <h1 className="text-2xl font-bold text-neutral-700">Mentor network — coming soon</h1>
           <p className="mt-1 text-sm text-neutral-500">
-            Book a 1:1 video call with a verified local expert in your destination city.
+            We're recruiting real local experts and verifying each one before any consultation is offered.
           </p>
           <div className="mt-4 rounded-xl border border-amber-300 bg-amber-50 p-4 text-sm leading-relaxed text-amber-900">
             <strong>This section is not live yet.</strong> Every profile below is
@@ -81,7 +81,9 @@ function MentorsPage() {
         </div>
       </div>
 
-      {/* City filter + search */}
+      {/* Filter UI only makes sense when there are mentors to filter. With
+          none, city chips and a search box imply bookable experts exist. */}
+      {mentors.length > 0 && (
       <div className="sticky top-14 z-10 border-b border-neutral-100 bg-white/95 px-4 py-3 backdrop-blur sm:px-6">
         <div className="mx-auto max-w-6xl space-y-3">
           <div className="flex gap-2 overflow-x-auto pb-1">
@@ -107,12 +109,13 @@ function MentorsPage() {
           />
         </div>
       </div>
+      )}
 
       {/* Mentor grid */}
       <div className="mx-auto max-w-6xl px-4 py-5 sm:px-6">
-        {error && (
-          <p className="rounded-xl bg-red-50 p-4 text-center text-sm text-red-600">{error}</p>
-        )}
+        {/* We never surface a raw store error to a visitor: the empty state
+            below states what is actually true — there are no mentors yet. */}
+        {error ? null : null}
         {loading && (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 6 }).map((_, i) => (
@@ -121,12 +124,22 @@ function MentorsPage() {
           </div>
         )}
         {!loading && filtered.length === 0 && (
-          <div className="card flex flex-col items-center gap-2 p-10 text-center">
-            <span className="text-4xl">🔍</span>
-            <p className="font-semibold text-neutral-700">No mentors match your search</p>
-            <p className="text-sm text-neutral-500">
-              Try a different city or search term.
+          <div className="card flex flex-col items-center gap-3 p-10 text-center">
+            <span className="text-4xl">🤝</span>
+            <p className="font-semibold text-neutral-700">
+              No mentors yet — this is coming, not broken
             </p>
+            <p className="max-w-md text-sm text-neutral-500">
+              We are recruiting real local experts and verifying each one before
+              any consultation is offered. Nothing on this page is a real person
+              yet, and nothing can be booked.
+            </p>
+            <a
+              href="mailto:hello@globalmobilis.com?subject=Mentors%20—%20let%20me%20know%20when%20they%27re%20live"
+              className="mt-1 rounded-full bg-brand-primary-700 px-6 py-2.5 text-sm font-semibold text-white hover:bg-brand-primary-800"
+            >
+              Tell me when mentors are live
+            </a>
           </div>
         )}
         {!loading && filtered.length > 0 && (

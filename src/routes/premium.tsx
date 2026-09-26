@@ -31,12 +31,12 @@ const plans = [
     stripeUrl: STRIPE_MONTHLY,
     features: [
       "Advanced destination comparisons",
-      "Direct expert consultations",
+      // "Direct expert consultations" removed: we have no mentor network and
+      // none can be booked, so it cannot be sold as a Premium benefit.
       "Enhanced translation (50/mo)",
       "Priority support",
       "Detailed market reports",
       "Cost of living breakdowns",
-      "Community mentorship access",
       "Ad-free experience",
     ],
     highlighted: false,
@@ -51,7 +51,6 @@ const plans = [
     features: [
       "Everything in Monthly",
       "Unlimited translations",
-      "VIP expert consultations",
       "Exclusive expat events",
       "Premium destination data",
       "Early access to new features",
@@ -168,8 +167,8 @@ function PremiumPage() {
               </p>
               <p className="text-xs text-neutral-500">
                 {status?.loggedIn
-                  ? "Upgrade to unlock advanced comparisons, expert consultations, and more."
-                  : "Sign in and upgrade to unlock advanced comparisons, expert consultations, and more."}
+                  ? "Upgrade to unlock advanced comparisons, detailed market reports and priority support."
+                  : "Sign in and upgrade to unlock advanced comparisons, detailed market reports and priority support."}
               </p>
             </div>
           </div>
@@ -288,7 +287,7 @@ function PremiumPage() {
                   { name: "Basic messaging", free: "✅", premium: "✅" },
                   { name: "Community access", free: "✅", premium: "✅" },
                   { name: "Advanced comparisons", free: "—", premium: "✅" },
-                  { name: "Expert consultations", free: "—", premium: "✅" },
+                  // Removed "Expert consultations" row — the feature does not exist yet.
                   { name: "Translations per month", free: "5", premium: "Unlimited" },
                   { name: "Priority support", free: "—", premium: "✅" },
                   { name: "Detailed market reports", free: "—", premium: "✅" },
