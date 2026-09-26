@@ -176,8 +176,8 @@ function FeaturesPage() {
             Start Free, Upgrade When You're Ready
           </h2>
           <p className="mx-auto mb-6 max-w-xl text-white/80">
-            All core features are free forever. Premium plans start at just
-            $9.99/month for advanced tools and expert consultations.
+            All core features are free forever. Premium starts at $14/month for
+            advanced comparisons, detailed market reports and priority support.
           </p>
           <a
             href="mailto:hello@globalmobilis.com"

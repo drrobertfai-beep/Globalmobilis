@@ -188,10 +188,6 @@ function MediaPage() {
                   <div className="text-2xl font-bold text-[#F47B53]">31</div>
                   <div className="text-xs text-white/70">Countries</div>
                 </div>
-                <div className="animate-float absolute top-1/2 -right-8 rounded-2xl bg-white/10 backdrop-blur p-4 shadow-xl border border-white/20" style={{ animationDelay: "2s" }}>
-                  <div className="text-2xl font-bold text-[#0FA3A3]">4.9★</div>
-                  <div className="text-xs text-white/70">App Rating</div>
-                </div>
 
                 {/* Central globe */}
                 <div className="flex h-full w-full items-center justify-center">
@@ -215,10 +211,13 @@ function MediaPage() {
       {/* ═══ STATS ═══ */}
       <div ref={statsRef} className="bg-white py-16">
         <div className="mx-auto grid max-w-4xl grid-cols-2 gap-8 px-4 sm:grid-cols-4 sm:px-6">
-          <StatCard value={200} suffix="+" label="Destinations" inView={statsInView} />
-          <StatCard value={50} suffix="K+" label="Community Members" inView={statsInView} />
-          <StatCard value={15} suffix="+" label="Countries" inView={statsInView} />
-          <StatCard value={4.9} suffix="" label="App Rating" inView={statsInView} />
+          {/* Only figures we can verify. These read 200+ destinations, 50K+
+              community members, 15+ countries and a 4.9 app rating — all
+              invented, and there is no app store listing to rate at all. */}
+          <StatCard value={36} suffix="" label="Destinations" inView={statsInView} />
+          <StatCard value={31} suffix="" label="Countries" inView={statsInView} />
+          <StatCard value={8} suffix="" label="Visa Pathways" inView={statsInView} />
+          <StatCard value={28} suffix="" label="Languages" inView={statsInView} />
         </div>
       </div>
 
@@ -312,7 +311,7 @@ function MediaPage() {
               Inside Global Mobilis
             </h2>
             <p className="mx-auto max-w-2xl text-gray-600">
-              Take a peek at the platform that's showing what is in it today.
+              Take a peek inside the platform.
             </p>
           </div>
 
