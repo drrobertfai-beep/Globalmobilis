@@ -55,9 +55,9 @@ const featureGroups = [
       },
       {
         icon: "👤",
-        title: "Mentorship Matching",
+        title: "Mentorship Matching (coming soon)",
         description:
-          "Browse verified local experts and book a 1:1 video consultation before you arrive.",
+          "We're recruiting real local experts and verifying each one before any consultation is offered.",
         href: "/mentors",
         accentColor: "#0E4F8B",
       },
@@ -110,13 +110,6 @@ const featureGroups = [
     section: "Premium Features",
     description: "Unlock the full power of Global Mobilis.",
     features: [
-      {
-        icon: "⭐",
-        title: "Expert Consultations",
-        description:
-          "One-on-one video calls with immigration lawyers, relocation specialists, and career coaches.",
-        accentColor: "#F4B860",
-      },
       {
         icon: "📊",
         title: "Advanced Reports",
