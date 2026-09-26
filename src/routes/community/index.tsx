@@ -370,13 +370,24 @@ function CommunityPage() {
 
   const load = async () => {
     setLoading(true);
-    const [commResult, threadsResult] = await Promise.all([
-      getCommunityData(),
-      listThreads({ category: null }),
-    ]);
-    setData(commResult as unknown as CommunityData);
-    setThreads(threadsResult as unknown as ThreadView[]);
-    setLoading(false);
+    try {
+      const [commResult, threadsResult] = await Promise.all([
+        getCommunityData(),
+        listThreads({ category: null }),
+      ]);
+      setData(commResult as unknown as CommunityData);
+      setThreads(threadsResult as unknown as ThreadView[]);
+    } catch {
+      // These stores are still moving off the ephemeral filesystem and can fail
+      // on the live host. Without this, the request rejects, setLoading(false)
+      // never runs, and a visitor is left staring at a loading skeleton with
+      // nothing under it. Falling through to the empty state tells the truth:
+      // the community is new and nobody has posted yet.
+      setData(null);
+      setThreads([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
