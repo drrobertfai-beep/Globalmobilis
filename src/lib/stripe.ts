@@ -90,7 +90,7 @@ export const premiumPlans = [
   {
     id: "monthly",
     name: "Premium Monthly",
-    price: 9.99,
+    price: 14,
     period: "/month",
     description: "Perfect for active expats and globetrotters",
     priceId: PRICE_IDS.monthly || "price_monthly_placeholder",
@@ -109,9 +109,9 @@ export const premiumPlans = [
   {
     id: "yearly",
     name: "Premium Yearly",
-    price: 79.99,
+    price: 120,
     period: "/year",
-    description: "Best value — save 33% over monthly",
+    description: "Best value — save 29% over monthly",
     priceId: PRICE_IDS.yearly || "price_yearly_placeholder",
     features: [
       "Everything in Monthly",

@@ -28,6 +28,8 @@ export interface PremiumStatus {
   tier: string;
   name: string;
   email: string;
+  /** The current user's id, when signed in (used for checkout attribution). */
+  userId: string | null;
   /** Human label for the current plan (monthly/yearly), when subscribed. */
   planLabel: string | null;
   loggedIn: boolean;
@@ -151,6 +153,7 @@ async function buildStatus(session: AuthSession | null): Promise<PremiumStatus> 
       tier: "free",
       name: "",
       email: "",
+      userId: null,
       planLabel: null,
       loggedIn: false,
     };
@@ -165,6 +168,7 @@ async function buildStatus(session: AuthSession | null): Promise<PremiumStatus> 
     tier: effectiveTier,
     name: session.name,
     email: session.email,
+    userId: session.userId,
     planLabel: isSubscribed(effectiveTier)
       ? pointsPremium && !isSubscribed(tier)
         ? "Premium (Points)"
@@ -197,30 +201,6 @@ export const getPremiumStatus = createServerFn({ method: "GET" }).handler(
   async () => {
     const session = await getCurrentSession();
     return buildStatus(session);
-  },
-);
-
-/**
- * One-time activation link: upgrades the *currently logged-in user* to premium.
- * Used after a successful payment (e.g. `?checkout=success` return from Stripe
- * Checkout) when the webhook hasn't fired yet, or as the demo/dev path while
- * STRIPE_SECRET_KEY is not configured. In production this is superseded by the
- * Stripe webhook, which upgrades by userId from the session metadata.
- */
-export const activatePremium = createServerFn({ method: "POST" }).handler(
-  async () => {
-    const session = await getCurrentSession();
-    if (!session) {
-      const status = await buildStatus(null);
-      return { success: false, status, error: "You must be signed in to activate premium." };
-    }
-    const upgraded = await upgradeUserToPremium(session.userId);
-    const status = await buildStatus(session);
-    return {
-      success: upgraded,
-      status,
-      error: upgraded ? undefined : "Could not upgrade — user not found.",
-    };
   },
 );
 

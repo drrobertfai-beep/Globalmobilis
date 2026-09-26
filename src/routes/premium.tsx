@@ -1,10 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { createCheckoutSession } from "~/lib/stripe";
-import {
-  activatePremium,
-  getPremiumStatus,
-} from "~/lib/premium";
+import { getPremiumStatus } from "~/lib/premium";
 
 
 
@@ -17,14 +14,18 @@ export const Route = createFileRoute("/premium")({
 });
 
 // Stripe payment links — used as the fallback when the Stripe API keys aren't
-// configured yet (createCheckoutSession returns an error) or for guests.
-const STRIPE_MONTHLY = "https://buy.stripe.com/00weVd3lS0wPg6U7vO9EI02";
-const STRIPE_YEARLY = "https://buy.stripe.com/9B6cN53lS0wP3k8bM49EI03";
+// configured yet (createCheckoutSession returns an error). LIVE links created
+// on the Global Mobilis Stripe account (product "Global Mobilis Premium").
+// Price per link VERIFIED by loading each checkout page:
+//   monthly $14.00/mo  → https://buy.stripe.com/eVq3cv9ED0hidcsapv1sQ01  ("$14.00 per month")
+//   yearly  $120.00/yr → https://buy.stripe.com/dRm9ATaIH7JKdcs1SZ1sQ00  ("$120.00 per year", $10.00/month billed annually)
+const STRIPE_MONTHLY = "https://buy.stripe.com/eVq3cv9ED0hidcsapv1sQ01";
+const STRIPE_YEARLY = "https://buy.stripe.com/dRm9ATaIH7JKdcs1SZ1sQ00";
 const plans = [
   {
     id: "monthly",
     name: "Premium Monthly",
-    price: 9.99,
+    price: 14,
     period: "/month",
     description: "Perfect for active expats and globetrotters",
     stripeUrl: STRIPE_MONTHLY,
@@ -43,9 +44,9 @@ const plans = [
   {
     id: "yearly",
     name: "Premium Yearly",
-    price: 79.99,
+    price: 120,
     period: "/year",
-    description: "Best value — save 33% over monthly",
+    description: "Best value — save 29% over monthly",
     stripeUrl: STRIPE_YEARLY,
     features: [
       "Everything in Monthly",
@@ -65,8 +66,6 @@ function PremiumPage() {
   const [status, setStatus] = useState<PremiumStatus | null>(null);
   const [busyPlan, setBusyPlan] = useState<string | null>(null);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
-  const [activating, setActivating] = useState(false);
-  const [activated, setActivated] = useState(false);
 
   const search = Route.useSearch() as { checkout?: string };
   const checkoutParam = search.checkout;
@@ -80,6 +79,21 @@ function PremiumPage() {
       mounted = false;
     };
   }, []);
+
+  /**
+   * Build the fallback payment-link URL. For signed-in users the link is
+   * attributed back to their account (client_reference_id + prefilled_email)
+   * so the resulting Stripe customer/subscription can be matched to them.
+   * Signed-out visitors get the plain link, unchanged.
+   */
+  const attributedStripeUrl = (plan: (typeof plans)[number]) => {
+    const url = new URL(plan.stripeUrl);
+    if (status?.loggedIn && status.userId) {
+      url.searchParams.set("client_reference_id", status.userId);
+      if (status.email) url.searchParams.set("prefilled_email", status.email);
+    }
+    return url.href;
+  };
 
   const startCheckout = async (plan: (typeof plans)[number]) => {
     setBusyPlan(plan.id);
@@ -101,20 +115,9 @@ function PremiumPage() {
     if (res.success && res.url) {
       window.location.href = res.url;
     } else {
-      // Stripe API keys not configured — fall back to the hosted payment link.
-      window.location.href = plan.stripeUrl;
-    }
-  };
-
-  const completeActivation = async () => {
-    setActivating(true);
-    const res = await activatePremium();
-    setActivating(false);
-    if (res.success) {
-      setActivated(true);
-      setStatus(res.status);
-    } else {
-      setCheckoutError(res.error ?? "Activation failed. Please try again.");
+      // Stripe API keys not configured — fall back to the hosted payment link
+      // (attributed to this user when signed in).
+      window.location.href = attributedStripeUrl(plan);
     }
   };
 
@@ -142,7 +145,7 @@ function PremiumPage() {
               <span className="text-2xl">⭐</span>
               <div>
                 <p className="text-sm font-bold text-neutral-700">
-                  You're {activated ? "now" : ""} a Premium member{status.planLabel ? ` — ${status.planLabel}` : ""} 🎉
+                  You're a Premium member{status.planLabel ? ` — ${status.planLabel}` : ""} 🎉
                 </p>
                 <p className="text-xs text-neutral-500">
                   All premium features are unlocked for {status.name || "your account"}.
@@ -172,29 +175,23 @@ function PremiumPage() {
           </div>
         )}
 
-        {/* Post-checkout banner */}
-        {(checkoutParam === "success" || activated) && (
+        {/* Post-checkout banner — honest, and does NOT grant premium server-side.
+            Premium is activated only after the team confirms the payment in
+            Stripe (scripts/grant-premium.ts). */}
+        {checkoutParam === "success" && (
           <div className="mt-4 rounded-2xl border border-green-200 bg-green-50 px-6 py-4">
             <p className="text-sm font-semibold text-green-800">
-              ✅ Payment received{activated ? " and premium activated" : ""}!
+              ✅ Payment received — activating your Premium access
             </p>
             <p className="mt-1 text-xs text-green-700">
-              {status?.subscribed
-                ? "Your account is fully upgraded. Enjoy premium!"
-                : "Your payment went through. Activate premium on your account to unlock everything."}
+              Thanks for subscribing! We're confirming your payment and will
+              activate Premium on your account shortly — you'll see it here once
+              it's live. If your account isn't upgraded within 24 hours,
+              <a href="mailto:hello@globalmobilis.com" className="font-semibold underline underline-offset-2"> contact us</a>.
             </p>
-            {!status?.subscribed && (
-              <button
-                onClick={completeActivation}
-                disabled={activating}
-                className="mt-3 rounded-xl bg-green-600 px-5 py-2 text-sm font-bold text-white transition-colors hover:bg-green-700 disabled:opacity-60"
-              >
-                {activating ? "Activating…" : "Activate Premium on my account"}
-              </button>
-            )}
           </div>
         )}
-        {checkoutParam === "cancelled" && !activated && (
+        {checkoutParam === "cancelled" && (
           <div className="mt-4 rounded-2xl border border-neutral-200 bg-neutral-50 px-6 py-4 text-sm text-neutral-600">
             Checkout was cancelled — no charge was made. You can try again anytime.
           </div>
