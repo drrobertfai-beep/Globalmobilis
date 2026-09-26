@@ -98,8 +98,8 @@ function DashboardPage() {
         {/* Quick stats */}
         <div className="grid grid-cols-3 gap-3">
           {[
-            { label: "Destinations", value: "200+", color: "text-brand-primary-700" },
-            { label: "Community", value: "50K+", color: "text-brand-secondary-500" },
+            { label: "Destinations", value: "36", color: "text-brand-primary-700" },
+            { label: "Countries", value: "31", color: "text-brand-secondary-500" },
             { label: "Free to Join", value: "100%", color: "text-brand-gold-500" },
           ].map((stat) => (
             <div key={stat.label} className="card text-center">
@@ -439,27 +439,21 @@ function DashboardPage() {
           </div>
         </section>
 
-        {/* Community activity */}
+        {/* Community activity — shown only when there is real activity.
+            This block used to display a hardcoded feed ("Ana Silva joined
+            Toronto Tech Expats, 2h ago") for people who do not exist. An
+            empty, honest state is better than invented activity. */}
         <section>
           <h2 className="mb-4 text-lg font-bold text-neutral-700">Your community</h2>
-          <div className="space-y-3">
-            {[
-              { name: "Ana Silva", action: "joined Toronto Tech Expats", time: "2h ago", color: "bg-brand-coral-500" },
-              { name: "Marcus Chen", action: "posted in Berlin Creatives", time: "5h ago", color: "bg-brand-secondary-500" },
-              { name: "Priya Patel", action: "RSVPed to Global Meetup", time: "1d ago", color: "bg-brand-gold-500" },
-            ].map((item) => (
-              <div key={item.name} className="card flex items-center gap-3 p-4">
-                <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white ${item.color}`}>
-                  {item.name.split(" ").map((n) => n[0]).join("")}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm text-neutral-700">
-                    <strong>{item.name}</strong> {item.action}
-                  </p>
-                  <p className="text-xs text-neutral-500">{item.time}</p>
-                </div>
-              </div>
-            ))}
+          <div className="card p-6 text-center">
+            <p className="text-sm text-neutral-600">
+              No community activity yet — Global Mobilis is new, and the groups
+              and forums are still being built.
+            </p>
+            <p className="mt-2 text-sm text-neutral-500">
+              When people start posting about your destinations, their activity
+              will appear here. Nothing on this page is simulated.
+            </p>
           </div>
         </section>
 

@@ -10,7 +10,7 @@ export const Route = createFileRoute("/mentors/")({
       {
         name: "description",
         content:
-          "Book a 1:1 video consultation with verified local mentors — immigration lawyers, recruiters, visa experts and more in your destination city.",
+          "Mentor consultations are planned but not yet available — the listings are illustrative placeholders while we recruit and verify real mentors.",
       },
     ],
   }),
@@ -70,6 +70,14 @@ function MentorsPage() {
           <p className="mt-1 text-sm text-neutral-500">
             Book a 1:1 video call with a verified local expert in your destination city.
           </p>
+          <div className="mt-4 rounded-xl border border-amber-300 bg-amber-50 p-4 text-sm leading-relaxed text-amber-900">
+            <strong>This section is not live yet.</strong> Every profile below is
+            an illustrative placeholder — not a real person — and no
+            consultation can be booked today. Global Mobilis has no mentor
+            network yet. We are recruiting real mentors and will verify them
+            individually before anyone is offered for booking. We would rather
+            say that plainly than call a made-up lawyer “verified”.
+          </div>
         </div>
       </div>
 

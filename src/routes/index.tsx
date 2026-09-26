@@ -119,12 +119,12 @@ function Home() {
               {/* Stats */}
               <div className="animate-fade-in-up-delay-3 mt-10 flex flex-wrap justify-center gap-8 border-t border-gray-100 pt-8 lg:justify-start">
                 <div className="text-center lg:text-left">
-                  <div className="text-2xl font-bold text-[#0E4F8B]">200+</div>
+                  <div className="text-2xl font-bold text-[#0E4F8B]">36</div>
                   <div className="text-xs text-gray-500">Destinations</div>
                 </div>
                 <div className="text-center lg:text-left">
-                  <div className="text-2xl font-bold text-[#0FA3A3]">50K+</div>
-                  <div className="text-xs text-gray-500">Community Members</div>
+                  <div className="text-2xl font-bold text-[#0FA3A3]">31</div>
+                  <div className="text-xs text-gray-500">Countries</div>
                 </div>
                 <div className="text-center lg:text-left">
                   <div className="text-2xl font-bold text-[#F4B860]">100%</div>

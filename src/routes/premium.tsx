@@ -334,7 +334,7 @@ function PremiumPage() {
         {/* CTA */}
         <div className="mt-16 rounded-2xl bg-gradient-to-br from-brand-primary-600 to-brand-secondary-600 px-8 py-12 text-center text-white">
           <h2 className="text-2xl font-bold">Ready to go global?</h2>
-          <p className="mt-2 text-white/80">Join thousands of expats who've made the move with Global Mobilis.</p>
+          <p className="mt-2 text-white/80">Be one of the first people to plan a move with Global Mobilis.</p>
           <Link to="/signup" className="btn mt-6 inline-block rounded-xl bg-white px-8 py-3 text-sm font-bold text-brand-primary-700 hover:bg-neutral-100">
             Start Your Journey
           </Link>

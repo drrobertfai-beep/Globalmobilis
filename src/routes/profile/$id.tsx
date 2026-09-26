@@ -22,36 +22,18 @@ interface PublicProfile {
 /** Maps public profile ids to their seeded conversation ids (messages/data
  * conversations.json). Profiles without an entry fall back to the community
  * directory instead of a dead "Message" link. */
-const CONVERSATION_BY_PROFILE: Record<string, string> = {
-  "ana-silva": "c_ana",
-  "marcus-chen": "c_marcus",
-};
-const mockProfiles: Record<string, PublicProfile> = {
-  "ana-silva": {
-    id: "ana-silva", name: "Ana Silva", username: "@anasilva", avatar: "AS", color: "bg-brand-coral-500",
-    bio: "Software engineer turned expat. Helping others navigate the move to Canada. 🇨🇦",
-    home: { city: "São Paulo", flag: "🇧🇷" },
-    current: { city: "Toronto", flag: "🇨🇦" },
-    connections: 287,
-    interests: ["Tech", "Hiking", "Photography", "Coffee", "Startups"],
-    journey: [
-      { city: "São Paulo", country: "Brazil", flag: "🇧🇷", year: "1995–2023", color: "bg-brand-coral-500", desc: "Born and raised" },
-      { city: "Toronto", country: "Canada", flag: "🇨🇦", year: "2023–Present", color: "bg-brand-secondary-500", desc: "Moved for work — loving it!" },
-    ],
-  },
-  "marcus-chen": {
-    id: "marcus-chen", name: "Marcus Chen", username: "@marcuschen", avatar: "MC", color: "bg-brand-secondary-500",
-    bio: "Product designer. Berlin via Singapore. Ask me about the visa process! 🇩🇪",
-    home: { city: "Singapore", flag: "🇸🇬" },
-    current: { city: "Berlin", flag: "🇩🇪" },
-    connections: 412,
-    interests: ["Design", "Music", "Languages", "Cycling"],
-    journey: [
-      { city: "Singapore", country: "Singapore", flag: "🇸🇬", year: "1992–2021", color: "bg-brand-primary-500", desc: "Grew up in the Lion City" },
-      { city: "Berlin", country: "Germany", flag: "🇩🇪", year: "2021–Present", color: "bg-brand-gold-500", desc: "Living the Berlin life" },
-    ],
-  },
-};
+// Public profiles are served from the database only.
+//
+// This file previously hardcoded two invented members — "Ana Silva"
+// (287 connections) and "Marcus Chen" (412 connections) — with invented bios,
+// home cities and move histories, plus fake conversation ids, and served them
+// at /profile/ana-silva as though they were real users. A stranger browsing the
+// community would find people who never existed. Removed: profile pages now
+// render only real accounts, and ids with no account fall back to the
+// community directory.
+const CONVERSATION_BY_PROFILE: Record<string, string> = {};
+
+const mockProfiles: Record<string, PublicProfile> = {};
 
 function PublicProfilePage() {
   const { id } = Route.useParams();

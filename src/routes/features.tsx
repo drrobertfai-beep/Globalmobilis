@@ -14,7 +14,7 @@ const featureGroups = [
         icon: "🌍",
         title: "City & Country Guides",
         description:
-          "In-depth profiles for 200+ destinations covering job markets, housing, culture, and more.",
+          "In-depth profiles for 36 destinations covering job markets, housing, culture, and more.",
         accentColor: "#0E4F8B",
       },
       {

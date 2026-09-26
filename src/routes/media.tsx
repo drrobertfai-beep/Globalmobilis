@@ -156,7 +156,7 @@ function MediaPage() {
                 </span>
               </h1>
               <p className="animate-fade-in-up mb-8 text-lg leading-relaxed text-white/80" style={{ animationDelay: "0.2s", animationFillMode: "forwards" }}>
-                From researching destinations to building your new life abroad — Global Mobilis is the all-in-one platform trusted by thousands of expats, students, and global professionals.
+                From researching destinations to building your new life abroad — Global Mobilis is the all-in-one platform for expats, students and global professionals — built in the open.
               </p>
               <div className="animate-fade-in-up flex flex-wrap gap-4" style={{ animationDelay: "0.4s", animationFillMode: "forwards" }}>
                 <a
@@ -181,12 +181,12 @@ function MediaPage() {
               >
                 {/* Floating stat cards */}
                 <div className="animate-float absolute -top-4 -left-4 rounded-2xl bg-white/10 backdrop-blur p-4 shadow-xl border border-white/20" style={{ animationDelay: "0s" }}>
-                  <div className="text-2xl font-bold text-[#F4B860]">200+</div>
+                  <div className="text-2xl font-bold text-[#F4B860]">36</div>
                   <div className="text-xs text-white/70">Destinations</div>
                 </div>
                 <div className="animate-float absolute -bottom-2 -right-2 rounded-2xl bg-white/10 backdrop-blur p-4 shadow-xl border border-white/20" style={{ animationDelay: "1s" }}>
-                  <div className="text-2xl font-bold text-[#F47B53]">50K+</div>
-                  <div className="text-xs text-white/70">Community Members</div>
+                  <div className="text-2xl font-bold text-[#F47B53]">31</div>
+                  <div className="text-xs text-white/70">Countries</div>
                 </div>
                 <div className="animate-float absolute top-1/2 -right-8 rounded-2xl bg-white/10 backdrop-blur p-4 shadow-xl border border-white/20" style={{ animationDelay: "2s" }}>
                   <div className="text-2xl font-bold text-[#0FA3A3]">4.9★</div>
@@ -239,7 +239,7 @@ function MediaPage() {
 
           <div className="grid gap-8 md:grid-cols-3">
             {[
-              { step: "01", icon: "🔍", title: "Discover", desc: "Explore 200+ destinations with real data on jobs, housing, cost of living, and quality of life — all in one place.", color: "#0E4F8B" },
+              { step: "01", icon: "🔍", title: "Discover", desc: "Explore 36 destinations with real data on jobs, housing, cost of living, and quality of life — all in one place.", color: "#0E4F8B" },
               { step: "02", icon: "🤝", title: "Connect", desc: "Join expat communities, find mentors, and chat with people who've already made the move. Real advice from real people.", color: "#0FA3A3" },
               { step: "03", icon: "🚀", title: "Move", desc: "Compare destinations side-by-side, access expert resources, and plan every aspect of your relocation with confidence.", color: "#F4B860" },
             ].map((item, i) => (
@@ -280,7 +280,7 @@ function MediaPage() {
 
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {[
-              { icon: "🌍", title: "200+ Destinations", desc: "Detailed guides on job markets, housing costs, education, and quality of life for cities worldwide." },
+              { icon: "🌍", title: "36 Destinations", desc: "Detailed guides on job markets, housing costs, education, and quality of life for cities worldwide." },
               { icon: "💬", title: "Built-in Translation", desc: "Real-time translation in messages and calls so you can connect across any language barrier." },
               { icon: "👥", title: "Expat Communities", desc: "Find your people before you even arrive — join groups, attend events, and build your network." },
               { icon: "📊", title: "Side-by-Side Compare", desc: "Compare cost of living, safety, job markets, and more across any two destinations." },
@@ -312,7 +312,7 @@ function MediaPage() {
               Inside Global Mobilis
             </h2>
             <p className="mx-auto max-w-2xl text-gray-600">
-              Take a peek at the platform that's helping thousands make their move.
+              Take a peek at the platform that's showing what is in it today.
             </p>
           </div>
 
@@ -321,7 +321,7 @@ function MediaPage() {
               {
                 src: "https://nyz3d0uniiwojldf.public.blob.vercel-storage.com/Global%20mobilis%20new%20videos/20260802_194200_36a67560.PNG",
                 alt: "Global Mobilis app screenshot - destinations",
-                caption: "Explore 200+ destinations with detailed guides",
+                caption: "Explore 36 destinations with detailed guides",
               },
               {
                 src: "https://nyz3d0uniiwojldf.public.blob.vercel-storage.com/Global%20mobilis%20new%20videos/20260802_201220_6e3d0fe0.PNG",
@@ -404,7 +404,7 @@ function MediaPage() {
             Ready to Start Your Global Journey?
           </h2>
           <p className="mb-8 text-lg text-white/80">
-            Join thousands of expats, students, and professionals who've made the move with Global Mobilis.
+            Global Mobilis is new. Be one of the first people using it to plan a move abroad.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <a
@@ -426,7 +426,7 @@ function MediaPage() {
             <p className="mb-4 text-sm text-white/60">Share with your network</p>
             <div className="flex flex-wrap justify-center gap-3">
               {[
-                { label: "X (Twitter)", href: `https://twitter.com/intent/tweet?url=${encodeURIComponent("https://globalmobilis.com/media")}&text=${encodeURIComponent("Your global journey starts here — discover 200+ destinations with Global Mobilis 🌍")}` },
+                { label: "X (Twitter)", href: `https://twitter.com/intent/tweet?url=${encodeURIComponent("https://globalmobilis.com/media")}&text=${encodeURIComponent("Your global journey starts here — discover 36 destinations with Global Mobilis 🌍")}` },
                 { label: "Facebook", href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent("https://globalmobilis.com/media")}` },
                 { label: "LinkedIn", href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent("https://globalmobilis.com/media")}` },
                 { label: "Copy Link", href: "#", onClick: (e: React.MouseEvent) => { e.preventDefault(); navigator.clipboard.writeText("https://globalmobilis.com/media"); } },
