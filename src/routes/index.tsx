@@ -191,7 +191,7 @@ function Home() {
                 step: "01",
                 title: "Choose Your Destination",
                 description:
-                  "Explore detailed guides on job markets, cost of living, housing, education, and visa requirements for hundreds of cities worldwide.",
+                  "Explore detailed guides on job markets, cost of living, housing, education, and visa requirements for 36 researched cities worldwide.",
                 color: "#0E4F8B",
               },
               {

@@ -369,13 +369,13 @@ function DashboardPage() {
             >
               <span className="text-3xl">🎥</span>
               <div className="flex-1">
-                <h3 className="font-bold text-gray-900">Talk to a local expert</h3>
+                <h3 className="font-bold text-gray-900">Mentor network — coming soon</h3>
                 <p className="text-sm text-gray-600">
-                  Book a 1:1 video call with a verified mentor in your destination city.
+                  We're recruiting real local experts and verifying each one before any consultation is offered.
                 </p>
               </div>
               <span className="shrink-0 rounded-full bg-brand-secondary-500 px-4 py-1.5 text-sm font-semibold text-white">
-                Book a mentor →
+                See what’s planned →
               </span>
             </Link>
           );
