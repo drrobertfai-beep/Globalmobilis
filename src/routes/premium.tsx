@@ -15,11 +15,12 @@ export const Route = createFileRoute("/premium")({
 
 // Stripe payment links — used as the fallback when the Stripe API keys aren't
 // configured yet (createCheckoutSession returns an error). LIVE links created
-// on the Global Mobilis Stripe account (product "Global Mobilis Premium"):
-//   monthly $14.00/mo → https://buy.stripe.com/dRm9ATaIH7JKdcs1SZ1sQ00
-//   yearly  $120.00/yr → https://buy.stripe.com/eVq3cv9ED0hidcsapv1sQ01
-const STRIPE_MONTHLY = "https://buy.stripe.com/dRm9ATaIH7JKdcs1SZ1sQ00";
-const STRIPE_YEARLY = "https://buy.stripe.com/eVq3cv9ED0hidcsapv1sQ01";
+// on the Global Mobilis Stripe account (product "Global Mobilis Premium").
+// Price per link VERIFIED by loading each checkout page:
+//   monthly $14.00/mo  → https://buy.stripe.com/eVq3cv9ED0hidcsapv1sQ01  ("$14.00 per month")
+//   yearly  $120.00/yr → https://buy.stripe.com/dRm9ATaIH7JKdcs1SZ1sQ00  ("$120.00 per year", $10.00/month billed annually)
+const STRIPE_MONTHLY = "https://buy.stripe.com/eVq3cv9ED0hidcsapv1sQ01";
+const STRIPE_YEARLY = "https://buy.stripe.com/dRm9ATaIH7JKdcs1SZ1sQ00";
 const plans = [
   {
     id: "monthly",
